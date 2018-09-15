@@ -1,6 +1,8 @@
 
 #include "breadboard_input.h"
 #include "adc.h"
+#include <stdio.h>
+
 
 #define JOYSTICK_CALIBRATE
 
@@ -84,27 +86,35 @@ struct Joystick_positions joystick_read_positions(){
 }
 
 enum Direction joystick_get_direction(){
-	if (joystick_positions.x > joystick_offsets.x_neutral && joystick_positions.x >= joystick_positions.y){
+	if (joystick_positions.x > 0 && joystick_positions.x >= joystick_positions.y){
 		return RIGHT;
 	}
-	if (joystick_positions.x < joystick_offsets.x_neutral && joystick_positions.x <= joystick_positions.y){
+	if (joystick_positions.x < 0 && joystick_positions.x <= joystick_positions.y){
 		return LEFT;
 	}	
-	if (joystick_positions.y > joystick_offsets.y_neutral && joystick_positions.y >= joystick_positions.x){
+	if (joystick_positions.y > 0 && joystick_positions.y >= joystick_positions.x){
 		return UP;
 	}
-	if (joystick_positions.y < joystick_offsets.y_neutral && joystick_positions.y <= joystick_positions.x){
+	if (joystick_positions.y < 0 && joystick_positions.y <= joystick_positions.x){
 		return DOWN;
 	}
 	return NEUTRAL;
 } 
 
-uint8_t joystick_read_x(void){
-	return adc_read(X_AXIS);
+int joystick_read_x(void){
+	int out = adc_read(X_AXIS);
+	if (out > joystick_offsets.x_neutral){
+		return (1-(float)((joystick_offsets.x_max - out))/(joystick_offsets.x_max - joystick_offsets.x_neutral))*100;
+	}
+	return -(1-(float)((joystick_offsets.x_min - out))/(joystick_offsets.x_min - joystick_offsets.x_neutral))*100;
 }
 
-uint8_t joystick_read_y(void){
-	return adc_read(Y_AXIS);
+int joystick_read_y(void){
+	int out = adc_read(Y_AXIS);
+	if (out > joystick_offsets.y_neutral){
+		return (1-(float)((joystick_offsets.y_max - out))/(joystick_offsets.y_max - joystick_offsets.y_neutral))*100;
+	}
+	return -(1-(float)((joystick_offsets.y_min - out))/(joystick_offsets.y_min - joystick_offsets.y_neutral))*100;
 }
 
 uint8_t slider_read_left(void){

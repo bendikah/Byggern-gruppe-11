@@ -21,11 +21,11 @@
 void main(void){
   //DDRA = 0xFF;
   USART_Init ( MYUBRR );
-  set_bit(MCUCR,SRE);
-  set_bit(MCUCR, ISC01);
+  //set_bit(MCUCR,SRE);
+  //set_bit(MCUCR, ISC01);
   fdevopen(USART_Transmit, USART_Receive);
 
   //SRAM_test();
-  //testThisShit();
-  test_adc();
+  testThisShit();
+  //test_adc();
 }

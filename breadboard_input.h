@@ -27,8 +27,8 @@ void joystick_calibrate();
 struct Joystick_positions joystick_read_positions();
 enum Direction joystick_get_direction();
 
-uint8_t joystick_read_x(void);
-uint8_t joystick_read_y(void);
+int joystick_read_x(void);
+int joystick_read_y(void);
 
 uint8_t slider_read_left(void);
 uint8_t slider_read_right(void);
