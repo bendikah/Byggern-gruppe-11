@@ -2,22 +2,114 @@
 #include "breadboard_input.h"
 #include "adc.h"
 
+#define JOYSTICK_CALIBRATE
+
 #define LEFT_SLIDER		CHANNEL_1
-#define RIGHT_SLIDER	CHANNEL_2
+#define RIGHT_SLIDER		CHANNEL_2
 #define X_AXIS			CHANNEL_3
 #define Y_AXIS			CHANNEL_4
 
-uint8_t read_joystick_x(void){
-	return read_adc(X_AXIS);
+
+static struct Joystick_positions joystick_positions;
+static struct Joystick_offsets joystick_offsets;
+
+void joystick_init()
+{
+	joystick_offsets.x_neutral = 128;
+	joystick_offsets.x_max = 255;
+	joystick_offsets.x_min = 0;
+
+	joystick_offsets.y_neutral = 128;
+	joystick_offsets.y_max = 255;
+	joystick_offsets.y_min = 0;
+	
+	#ifdef JOYSTICK_CALIBRATE
+	joystick_calibrate();
+	#endif
 }
 
-uint8_t read_joystick_y(void){
-	return read_adc(Y_AXIS);
+void joystick_calibrate()
+{
+	/*printf("Calibrating Joystick - move joystick to TOP, then press the right button:\n");
+	while(!test_bit(PINB, rightButton)){};
+	
+	ADC_read(channelX);
+	
+	_delay_us(1000);
+	OFFSETS.y_max = POSITION.y;
+	_delay_ms(500);
+	
+	printf("Good job! value at TOP position: Y = %d\n\n", OFFSETS.y_max);
+	
+	printf("Calibrating Joystick - move joystick to RIGHT, then press the right button:\n");
+	while(!test_bit(PINB, rightButton)){};
+	
+	ADC_read(channelX);
+	_delay_us(1000);
+	OFFSETS.x_max = POSITION.x;
+	
+	_delay_ms(500);
+	printf("Good job! value at RIGHT position: X = %d\n\n", OFFSETS.x_max);
+	
+	printf("Calibrating Joystick - move joystick to LEFT, then press the right button:\n");
+	while(!test_bit(PINB, rightButton)){};
+		
+	ADC_read(channelX);
+	_delay_us(1000);
+	OFFSETS.x_min = POSITION.x;
+	
+	_delay_ms(500);
+	printf("Good job! value at LEFT position: X = %d\n\n", OFFSETS.x_min);
+	
+	printf("Calibrating Joystick - move joystick to BOTTOM, then press the right button:\n");
+	while(!test_bit(PINB, rightButton)){};
+	
+	ADC_read(channelX);
+	_delay_us(1000);
+	OFFSETS.y_min = POSITION.y;
+	
+	_delay_ms(500);
+	printf("Good job! value at BOTTOM position: Y = %d\n\n", OFFSETS.y_min);
+	
+	OFFSETS.x_neutral = (OFFSETS.x_max + OFFSETS.x_min)/2;
+	OFFSETS.y_neutral = (OFFSETS.y_max + OFFSETS.y_min)/2;
+	printf("Offsets calculated to be: x.neutral = %d, y.neutral = %d.\n\n", OFFSETS.x_neutral, OFFSETS.y_neutral);
+	*/	
 }
 
-uint8_t read_left_slider(void){
-	return read_adc(LEFT_SLIDER);
+struct Joystick_positions joystick_read_positions(){
+	joystick_positions.x = joystick_read_x();
+	joystick_positions.y = joystick_read_y();
+	return joystick_positions;
 }
-uint8_t read_right_slider(void){
-	return read_adc(RIGHT_SLIDER);
+
+enum Direction joystick_get_direction(){
+	if (joystick_positions.x > joystick_offsets.x_neutral && joystick_positions.x >= joystick_positions.y){
+		return RIGHT;
+	}
+	if (joystick_positions.x < joystick_offsets.x_neutral && joystick_positions.x <= joystick_positions.y){
+		return LEFT;
+	}	
+	if (joystick_positions.y > joystick_offsets.y_neutral && joystick_positions.y >= joystick_positions.x){
+		return UP;
+	}
+	if (joystick_positions.y < joystick_offsets.y_neutral && joystick_positions.y <= joystick_positions.x){
+		return DOWN;
+	}
+	return NEUTRAL;
+} 
+
+uint8_t joystick_read_x(void){
+	return adc_read(X_AXIS);
+}
+
+uint8_t joystick_read_y(void){
+	return adc_read(Y_AXIS);
+}
+
+uint8_t slider_read_left(void){
+	return adc_read(LEFT_SLIDER);
+}
+uint8_t slider_read_right(void){
+	return adc_read(RIGHT_SLIDER);
 }

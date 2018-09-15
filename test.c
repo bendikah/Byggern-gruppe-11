@@ -54,10 +54,10 @@ void testThisShit(void){
 
 void test_adc(void){
 	while(1){
-	uint8_t read_number_x = read_joystick_x();
-	uint8_t read_number_y = read_joystick_y();
-	uint8_t l_slider = read_left_slider();
-	uint8_t r_slider = read_right_slider();
+	uint8_t read_number_x = joystick_read_x();
+	uint8_t read_number_y = joystick_read_y();
+	uint8_t l_slider = slider_read_left();
+	uint8_t r_slider = slider_read_right();
 	printf("this is the values x = %02X y = %02X L_slider = %02X and R_slider = %02X \n",read_number_x,read_number_y,l_slider,r_slider);
 	}
 }

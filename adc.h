@@ -12,7 +12,7 @@
 #include <stdint.h>
 
 
-uint8_t read_adc(int channel);
+uint8_t adc_read(int channel);
 
 
 #endif
