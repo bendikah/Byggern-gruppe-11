@@ -4,6 +4,7 @@
 #include "test_sram.h"
 #define F_CPU 4915200
 #include "util/delay.h"
+#include "oled.h"
 
 #include "test.h"
 
@@ -25,7 +26,11 @@ void main(void){
   set_bit(MCUCR, ISC01);
   fdevopen(USART_Transmit, USART_Receive);
 
+  set_bit(SFIOR,XMM2);
   //SRAM_test();
   //testThisShit();
-  test_adc();
+  //test_adc();
+  oled_initialize();
+  oled_write('c');
+  //printthis();
 }
