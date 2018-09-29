@@ -1,11 +1,17 @@
 #include "oled.h"
+#define F_CPU 4915200
 
 #include "util/delay.h"
 #include "fonts.h"
+#include <string.h>
 
 
 #define OLED_COMMAND 0x1000 //why space and write, why not command and data?
 #define OLED_DATA 0x1200
+
+static int current_row;
+static int current_col;
+static char char_size;
 
 void oled_initialize(void){
     volatile char *oled_int = (char *) OLED_COMMAND; //why not oled write
@@ -34,13 +40,16 @@ void oled_initialize(void){
     //Initialize
 
 
-    //*oled_int = 0xa5;
+    //*oled_int = 0xa5; 
      //*oled_int = 0xa7;
 
-
-    *oled_int = 0xB0; // sets the page start address to upper left?
-    *oled_int = 0x00;
-    *oled_int = 0x10;
+    oled_goto_column(0);
+    oled_goto_line(0);
+    char_size = 'L';
+    oled_fill_screen();
+    _delay_ms(1000);
+    oled_clear_screen();
+    
 }
 
 
@@ -48,30 +57,32 @@ void oled_display_reset(){
     oled_write_c(0xa6);
 }
 
-void oled_clear(){
-    oled_write_c(0xB0);
-    oled_write_c(0x00);
-    oled_write_c(0x10);
-    for (int j = 0; j <7; j++){
-        for (int i = 0;i <128;i++){
-            oled_write_d(0);
+void oled_clear_screen(){
+    oled_goto_column(0);
+    for (int j = 0; j <8; j++){
+        oled_clear_line(j);
     }
 }
+
+void oled_clear_line(int row){
+    oled_goto_line(row);
+    for (int i = 0;i <128;i++){
+        oled_write_d(0);
+    }
+    oled_goto_column(0);
+    oled_goto_line(0);
 }
 
-void oled_write(char c){ 
-    
-    volatile char *oled_writel = (char *) OLED_DATA;
-    *oled_writel = 0;
-    
-    //*oled_writel = c;
-    /* *oled_write =0b00000110;
-    *oled_write =0b01011111;
-    *oled_write =0b01011111;
-    *oled_write =0b01011111;
-    *oled_write =0b00000000;
-    *oled_write =0b00000000; 
-    *oled_write =0b00000000;*/
+void oled_fill_screen(){
+    oled_goto_column(0);
+    for (int j = 0; j <8; j++){
+        oled_goto_line(j);
+        for (int i = 0;i <128;i++){
+            oled_write_d(0xFF);
+        }
+    }
+    oled_goto_line(0);
+    oled_goto_column(0);
 }
 
 void oled_write_c(char command){
@@ -85,22 +96,62 @@ void oled_write_d(char data){
 
 void oled_goto_line(line)
 {
-    if ((line>=0) && (line <= 7))
-    {
-        current_row = line;
-        oled_write_c(0xB0+line);
-    }
-    else
-    {
-        printf("Line should be between 0 and 7");
-    }
+    current_row = line;
+    oled_write_c(0xB0+line);
+    
 }
 
 void oled_goto_column(column)
 {
-    column = column * 8;
-    int left = (column & 0b11110000) >> 4;
-    int right = (column & 0b00001111);
-    oled_write_c(0x00+right);
-    oled_write_c(0x10+left);
+    current_col = column;
+    int high_terms = (column & 0b11110000) >> 4;
+    int low_terms = (column & 0b00001111);
+    oled_write_c(0x00+low_terms);
+    oled_write_c(0x10+high_terms);
+}
+
+void oled_set_char_size(char size){
+    char_size = size;
+}
+
+int oled_get_char_length(){
+    switch(char_size){
+        case ('L'): return 8;
+        case ('M'): return 5;
+        case ('S'): return 4;
+        default:    return 4;
+    }
+}
+
+void oled_put_c(char c){
+    if (c == '\n'){
+        current_row++;
+        current_row %= 8;
+        oled_goto_line(current_row);
+        oled_goto_column(0);
+        return;
+    }
+
+    c -= 32; 
+    for (int i = 0; i < oled_get_char_length(); i++){
+        switch (char_size){
+            case ('L'):
+                oled_write_d(pgm_read_byte(&(font8[c][i])));
+                break;
+            case ('M'):
+                oled_write_d(pgm_read_byte(&(font5[c][i])));
+                break;
+            case ('S'):
+                oled_write_d(pgm_read_byte(&(font4[c][i])));
+                break;
+        }
+    }
+}
+
+void oled_print(char* string){
+    for (int i = 0; i < strlen(string); i++){
+        oled_put_c(string[i]);
+        oled_goto_column(current_col+oled_get_char_length());
+        printf("%c",string[i]);
+    }
 }

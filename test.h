@@ -4,4 +4,5 @@
 
 void testThisShit(void);
 void test_adc(void);
+void test_latch();
 #endif

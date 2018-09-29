@@ -1,0 +1,6 @@
+
+
+
+Når vi kobler databussen fra atmega til oled så funker ikke SRAM. Av og til så virker det som om test_SRAM bare stopper opp da den ikke printer no errormelding heller. Hvis vi kobler ut databussen til oled så funker det og test_SRAM gir 0 error. 
+
+Joystick position y gir alltid positivt resultat. 

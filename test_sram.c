@@ -21,7 +21,7 @@ void SRAM_test(void){
   for (uint16_t i = 0; i < ext_ram_size; i++) {
     uint8_t some_value = rand();
     ext_ram[i] = some_value;
-
+    //if (i%100 == 0){printf("går fremover");}
     uint8_t retreived_value = ext_ram[i];
     if (retreived_value != some_value) {
       printf("Write phase error: ext_ram[%4d] = %02X (should be %02X)\n", i, retreived_value, some_value);

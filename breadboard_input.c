@@ -1,19 +1,23 @@
-
+#include "global_defines.h"
 #include "breadboard_input.h"
 #include "adc.h"
 #include <stdio.h>
+#include <avr/io.h>
 
 
-#define JOYSTICK_CALIBRATE
+//#define JOYSTICK_CALIBRATE
 
 #define LEFT_SLIDER		CHANNEL_1
 #define RIGHT_SLIDER		CHANNEL_2
 #define X_AXIS			CHANNEL_3
 #define Y_AXIS			CHANNEL_4
+#define JOYSTICK_BUTTON_PORT	PORTB
+#define JOYSTICK_BUTTON_PIN		0
 
 
 static struct Joystick_positions joystick_positions;
 static struct Joystick_offsets joystick_offsets;
+static int joy_last_button_value;
 
 void joystick_init()
 {
@@ -24,6 +28,9 @@ void joystick_init()
 	joystick_offsets.y_neutral = 128;
 	joystick_offsets.y_max = 255;
 	joystick_offsets.y_min = 0;
+
+	clear_bit( DDRB, JOYSTICK_BUTTON_PIN );
+	joy_last_button_value = 0;
 	
 	#ifdef JOYSTICK_CALIBRATE
 	joystick_calibrate();
@@ -115,6 +122,20 @@ int joystick_read_y(void){
 		return (1-(float)((joystick_offsets.y_max - out))/(joystick_offsets.y_max - joystick_offsets.y_neutral))*100;
 	}
 	return -(1-(float)((joystick_offsets.y_min - out))/(joystick_offsets.y_min - joystick_offsets.y_neutral))*100;
+}
+
+int joystick_read_button(void){
+	/*int joy_new_button_value = !test_bit( JOYSTICK_BUTTON_PORT, JOYSTICK_BUTTON_PIN );
+	if (joy_new_button_value && !joy_last_button_value){
+		joy_last_button_value = joy_new_button_value;
+		return joy_new_button_value;
+	}
+	if (!joy_new_button_value && joy_last_button_value){
+		joy_last_button_value = joy_new_button_value;
+		return joy_new_button_value;
+	}
+	return 0;*/
+	return !test_bit( JOYSTICK_BUTTON_PORT, JOYSTICK_BUTTON_PIN ); 
 }
 
 uint8_t slider_read_left(void){
