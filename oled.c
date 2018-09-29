@@ -45,32 +45,16 @@ void oled_initialize(void){
 
 
 void oled_display_reset(){
-    volatile char *oled_int = (char *) OLED_COMMAND;
-    *oled_int = 0xa6;
+    oled_write_c(0xa6);
 }
-
-
-/*
-void oled_goto_column(){
-    volatile char *oled_int = (char *) OLED_COMMAND;
-    *oled_int = 0xB0; // sets the page start address to upper left?
-    *oled_int = 0x00;
-    *oled_int = 0x1F;
-
-
-}
-*/
 
 void oled_clear(){
-    volatile char *oled_int = (char *) OLED_COMMAND;
-    *oled_int = 0xB0; // sets the page start address to upper left?
-    *oled_int = 0x00;
-    *oled_int = 0x10;
-
-    volatile char *oled_write = (char *) OLED_DATA;
+    oled_write_c(0xB0);
+    oled_write_c(0x00);
+    oled_write_c(0x10);
     for (int j = 0; j <7; j++){
         for (int i = 0;i <128;i++){
-            *oled_write =0x00;
+            oled_write_d(0);
     }
 }
 }
@@ -90,3 +74,33 @@ void oled_write(char c){
     *oled_write =0b00000000;*/
 }
 
+void oled_write_c(char command){
+    volatile char *oled_command = (char *) OLED_COMMAND;
+    oled_command[0] = command;
+}
+void oled_write_d(char data){
+    volatile char *oled_data = (char *) OLED_DATA;
+    oled_data[0] = data;
+}
+
+void oled_goto_line(line)
+{
+    if ((line>=0) && (line <= 7))
+    {
+        current_row = line;
+        oled_write_c(0xB0+line);
+    }
+    else
+    {
+        printf("Line should be between 0 and 7");
+    }
+}
+
+void oled_goto_column(column)
+{
+    column = column * 8;
+    int left = (column & 0b11110000) >> 4;
+    int right = (column & 0b00001111);
+    oled_write_c(0x00+right);
+    oled_write_c(0x10+left);
+}
