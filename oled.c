@@ -94,14 +94,14 @@ void oled_write_d(char data){
     oled_data[0] = data;
 }
 
-void oled_goto_line(line)
+void oled_goto_line(int line)
 {
     current_row = line;
     oled_write_c(0xB0+line);
     
 }
 
-void oled_goto_column(column)
+void oled_goto_column(int column)
 {
     current_col = column;
     int high_terms = (column & 0b11110000) >> 4;
