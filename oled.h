@@ -17,6 +17,9 @@ int oled_get_char_length();
 void oled_put_c(char c);
 void oled_print(char* string);
 
+void oled_line(int x0, int y0, int x1, int y1);
+void oled_circle(int x, int y, int r);
+
 
 #endif
 

@@ -6,15 +6,17 @@
 #include <string.h>
 
 
-#define OLED_COMMAND 0x1000 //why space and write, why not command and data?
-#define OLED_DATA 0x1200
+#define OLED_COMMAND    0x1000
+#define OLED_DATA       0x1200
+#define NUM_OF_PAGES    8
+#define NUM_OF_COLUMNS  128
 
 static int current_row;
 static int current_col;
 static char char_size;
 
 void oled_initialize(void){
-    volatile char *oled_int = (char *) OLED_COMMAND; //why not oled write
+    volatile char *oled_int = (char *) OLED_COMMAND;
     *oled_int = 0xae;        //  display  off  
     *oled_int = 0xa1;        //segment  remap  
     *oled_int = 0xda;        //common  pads  hardware:  alternative  
@@ -59,25 +61,25 @@ void oled_display_reset(){
 
 void oled_clear_screen(){
     oled_goto_column(0);
-    for (int j = 0; j <8; j++){
+    for (int j = 0; j < NUM_OF_PAGES; j++){
         oled_clear_line(j);
-    }
-}
-
-void oled_clear_line(int row){
-    oled_goto_line(row);
-    for (int i = 0;i <128;i++){
-        oled_write_d(0);
     }
     oled_goto_column(0);
     oled_goto_line(0);
 }
 
+void oled_clear_line(int row){
+    oled_goto_line(row);
+    for (int i = 0;i < NUM_OF_COLUMNS;i++) {
+        oled_write_d(0);
+    }
+}
+
 void oled_fill_screen(){
     oled_goto_column(0);
-    for (int j = 0; j <8; j++){
+    for (int j = 0; j < NUM_OF_PAGES; j++){
         oled_goto_line(j);
-        for (int i = 0;i <128;i++){
+        for (int i = 0;i < NUM_OF_COLUMNS;i++){
             oled_write_d(0xFF);
         }
     }
@@ -126,7 +128,7 @@ int oled_get_char_length(){
 void oled_put_c(char c){
     if (c == '\n'){
         current_row++;
-        current_row %= 8;
+        current_row %= NUM_OF_PAGES;
         oled_goto_line(current_row);
         oled_goto_column(0);
         return;
@@ -154,4 +156,44 @@ void oled_print(char* string){
         oled_goto_column(current_col+oled_get_char_length());
         printf("%c",string[i]);
     }
+}
+
+void oled_line(int x0, int y0, int x1, int y1){
+    //do checks that the values are within the oled display.
+    //and happens if 0-value is bigger than 1-value?
+
+    int page0 = y0 / NUM_OF_PAGES;
+    int bit0 = y0 % NUM_OF_PAGES;
+    int page1 = y1 / NUM_OF_PAGES;
+    int bit1 = y1 % NUM_OF_PAGES;
+
+    oled_goto_column(x0);
+    oled_goto_line(page0);
+
+    if (x0 == x1){ //line is vertical
+        oled_write_d((0b11111111 << bit0) & 0b11111111);
+        oled_goto_line(current_row+1);
+        for (int i = page0 + 1; i < page1; i++){
+            oled_write_d(0b11111111);
+            oled_goto_line(current_row+1);
+        }
+        oled_write_d((0b11111111 >> bit1) & 0b11111111);
+    }
+    else if (y0 == y1){ //line is horisontal
+        for (int i = x0; i <= x1; i++){
+            oled_write_d(1 << bit0);
+        }
+    }
+    else{ //line is diagonal
+        int dy = y1 - y0;
+        int dx = x1 - x0;
+        int gradient = ((float)dy)/dx;
+        if (dy > dx){
+            return;
+        }
+    }
+}
+
+void oled_circle(int x, int y, int r){
+    return;
 }
