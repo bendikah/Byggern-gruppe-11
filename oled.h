@@ -1,24 +1,25 @@
 #ifndef OLED_H
 #define OLED_H
 
+#include <avr/io.h>
 
 void oled_initialize(void);
-void oled_write(char c);
+void oled_write(uint8_t c);
 void oled_display_reset();
-void oled_clear_line(int row);
+void oled_clear_line(uint8_t row);
 void oled_clear_screen();
 void oled_fill_screen();
-void oled_write_c(char command);
-void oled_write_d(char data);
-void oled_goto_line(int line);
-void oled_goto_column(int column);
-void oled_set_char_size(char size);
-int oled_get_char_length();
-void oled_put_c(char c);
-void oled_print(char* string);
+void oled_write_c(uint8_t command);
+void oled_write_d(uint8_t data);
+void oled_goto_line(uint8_t line);
+void oled_goto_column(uint8_t column);
+void oled_set_char_size(uint8_t size);
+uint8_t oled_get_char_length();
+void oled_put_c(uint8_t c);
+__attribute__((format(printf,1,2))) void oled_printf(const char* fmt, ...);
 
-void oled_line(int x0, int y0, int x1, int y1);
-void oled_circle(int x, int y, int r);
+void oled_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1);
+void oled_circle(uint8_t x, uint8_t y, uint8_t r);
 
 
 #endif

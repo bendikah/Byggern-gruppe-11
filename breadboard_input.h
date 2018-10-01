@@ -29,7 +29,7 @@ enum Direction joystick_get_direction();
 
 int joystick_read_x(void);
 int joystick_read_y(void);
-int joystick_read_button(void);
+uint8_t joystick_read_button(void);
 
 uint8_t slider_read_left(void);
 uint8_t slider_read_right(void);

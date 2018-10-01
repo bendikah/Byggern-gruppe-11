@@ -3,7 +3,9 @@
 
 #include "util/delay.h"
 #include "fonts.h"
+#include "uart.h"
 #include <string.h>
+#include <stdio.h>
 
 
 #define OLED_COMMAND    0x1000
@@ -11,13 +13,15 @@
 #define NUM_OF_PAGES    8
 #define NUM_OF_COLUMNS  128
 
-static int current_row;
-static int current_col;
-static char char_size;
+static uint8_t current_row;
+static uint8_t current_col;
+static uint8_t char_size;
+
+static FILE oled_io = FDEV_SETUP_STREAM(oled_put_c, NULL, _FDEV_SETUP_WRITE);
 
 
 void oled_initialize(void){
-    volatile char *oled_int = (char *) OLED_COMMAND;
+    volatile uint8_t *oled_int = (uint8_t *) OLED_COMMAND;
     *oled_int = 0xae;        //  display  off  
     *oled_int = 0xa1;        //segment  remap  
     *oled_int = 0xda;        //common  pads  hardware:  alternative  
@@ -63,16 +67,16 @@ void oled_display_reset(){
 void oled_clear_screen(){
     oled_goto_column(0);
     oled_goto_line(0);
-    for (int j = 0; j < NUM_OF_PAGES; j++){
+    for (uint8_t j = 0; j < NUM_OF_PAGES; j++){
         oled_clear_line(j);
     }
     oled_goto_column(0);
     oled_goto_line(0);
 }
 
-void oled_clear_line(int row){
+void oled_clear_line(uint8_t row){
     oled_goto_line(row);
-    for (int i = 0;i < NUM_OF_COLUMNS;i++) {
+    for (uint8_t i = 0;i < NUM_OF_COLUMNS;i++) {
         oled_write_d(0);
     }
 }
@@ -80,9 +84,9 @@ void oled_clear_line(int row){
 void oled_fill_screen(){
     oled_goto_line(0);
     oled_goto_column(0);
-    for (int j = 0; j < NUM_OF_PAGES; j++){
+    for (uint8_t j = 0; j < NUM_OF_PAGES; j++){
         oled_goto_line(j);
-        for (int i = 0;i < NUM_OF_COLUMNS;i++){
+        for (uint8_t i = 0;i < NUM_OF_COLUMNS;i++){
             oled_write_d(0xFF);
         }
     }
@@ -90,36 +94,36 @@ void oled_fill_screen(){
     oled_goto_column(0);
 }
 
-void oled_write_c(char command){
-    volatile char *oled_command = (char *) OLED_COMMAND;
+void oled_write_c(uint8_t command){
+    volatile uint8_t *oled_command = (uint8_t *) OLED_COMMAND;
     oled_command[0] = command;
 }
-void oled_write_d(char data){
-    volatile char *oled_data = (char *) OLED_DATA;
+void oled_write_d(uint8_t data){
+    volatile uint8_t *oled_data = (uint8_t *) OLED_DATA;
     oled_data[0] = data;
 }
 
-void oled_goto_line(int line)
+void oled_goto_line(uint8_t line)
 {
     current_row = line;
     oled_write_c(0xB0+line);
     
 }
 
-void oled_goto_column(int column)
+void oled_goto_column(uint8_t column)
 {
     current_col = column;
-    int high_terms = (column & 0b11110000) >> 4;
-    int low_terms = (column & 0b00001111);
+    uint8_t high_terms = (column & 0b11110000) >> 4;
+    uint8_t low_terms = (column & 0b00001111);
     oled_write_c(0x00+low_terms);
     oled_write_c(0x10+high_terms);
 }
 
-void oled_set_char_size(char size){
+void oled_set_char_size(uint8_t size){
     char_size = size;
 }
 
-int oled_get_char_length(){
+uint8_t oled_get_char_length(){
     switch(char_size){
         case ('L'): return 8;
         case ('M'): return 5;
@@ -128,7 +132,7 @@ int oled_get_char_length(){
     }
 }
 
-void oled_put_c(char c){
+void oled_put_c(uint8_t c){
     if (c == '\n'){
         current_row++;
         current_row %= NUM_OF_PAGES;
@@ -138,7 +142,7 @@ void oled_put_c(char c){
     }
 
     c -= 32; 
-    for (int i = 0; i < oled_get_char_length(); i++){
+    for (uint8_t i = 0; i < oled_get_char_length(); i++){
         switch (char_size){
             case ('L'):
                 oled_write_d(pgm_read_byte(&(font8[c][i])));
@@ -153,22 +157,30 @@ void oled_put_c(char c){
     }
 }
 
-void oled_print(char* string){
-    for (int i = 0; i < strlen(string); i++){
-        oled_put_c(string[i]);
-        oled_goto_column(current_col+oled_get_char_length());
-        printf("%c",string[i]);
-    }
+void oled_printf(const char* fmt, ...){
+  va_list args;
+  va_start(args, fmt);
+  vfprintf(&oled_io, fmt, args);
+  va_end(args);
 }
 
-void oled_line(int x0, int y0, int x1, int y1){
+/*
+void oled_print(uint8_t* string){
+    for (uint8_t i = 0; i < strlen(string); i++){
+        oled_put_c(string[i]);
+        oled_goto_column(current_col+oled_get_char_length());
+        USART_printf("%c",string[i]);
+    }
+}*/
+
+void oled_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1){
     //do checks that the values are within the oled display.
     //and happens if 0-value is bigger than 1-value? Than we can just flip the values and everything is fine
 
-    int page0 = y0 / NUM_OF_PAGES;
-    int bit0 = y0 % NUM_OF_PAGES;
-    int page1 = y1 / NUM_OF_PAGES;
-    int bit1 = y1 % NUM_OF_PAGES;
+    uint8_t page0 = y0 / NUM_OF_PAGES;
+    uint8_t bit0 = y0 % NUM_OF_PAGES;
+    uint8_t page1 = y1 / NUM_OF_PAGES;
+    uint8_t bit1 = y1 % NUM_OF_PAGES;
 
     oled_goto_column(x0);
     oled_goto_line(page0);
@@ -176,28 +188,28 @@ void oled_line(int x0, int y0, int x1, int y1){
     if (x0 == x1){ //line is vertical
         oled_write_d((0b11111111 << bit0) & 0b11111111);
         oled_goto_line(current_row+1);
-        for (int i = page0 + 1; i < page1; i++){
+        for (uint8_t i = page0 + 1; i < page1; i++){
             oled_write_d(0b11111111);
             oled_goto_line(current_row+1);
         }
         oled_write_d((0b11111111 >> bit1) & 0b11111111);
     }
     else if (y0 == y1){ //line is horisontal
-        for (int i = x0; i <= x1; i++){
+        for (uint8_t i = x0; i <= x1; i++){
             oled_write_d(1 << bit0);
         }
     }
     else{ //line is diagonal
-        int dy = y1 - y0;
-        int dx = x1 - x0;
-        int gradient = ((float)dy)/dx;
+        uint8_t dy = y1 - y0;
+        uint8_t dx = x1 - x0;
+        uint8_t gradient = ((float)dy)/dx;
         if (dy > dx){
             return;
         }
     }
 }
 
-void oled_circle(int x, int y, int r){
+void oled_circle(uint8_t x, uint8_t y, uint8_t r){
     return;
 }
 

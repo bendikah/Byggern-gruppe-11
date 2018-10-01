@@ -21,12 +21,12 @@
 #define loop_until_bit_is_clear( reg, bit ) while( test_bit( reg, bit ) )
 
 
-void main(void){
+int main(void){
   //DDRA = 0xFF;
   USART_Init ( MYUBRR );
   set_bit(MCUCR,SRE);
   //set_bit(MCUCR, ISC01);
-  fdevopen(USART_Transmit, USART_Receive);
+  //fdevopen(USART_Transmit, USART_Receive);
   joystick_init();
 
 	oled_initialize();
@@ -38,7 +38,7 @@ void main(void){
 	menu_init();
 
 	while(1){
-		joy_pos = joystick_read_positions();
+		/*joy_pos = joystick_read_positions();
 		if (joy_pos.y >= 50){
 			menu_decrement_branch();
 			printf("Ting skjer de\n");
@@ -46,12 +46,13 @@ void main(void){
 		} else if (joy_pos.y <= -50){
 			menu_increment_branch();
 			printf("Ting skjer in\n");
-		}
-		if (joystick_read_button()){
+		}*/
+		if (joystick_read_button() == 1){
 			int variabel = get_menu_branch();
-			printf("Dette funker? %d\n",variabel);
+			USART_printf("Dette funker? %d\n",variabel);
 		}
 		_delay_ms(500);
-
+		//printf("y-pos: %d\n", joy_pos.y);
+		USART_printf("ting gårfremover 2\n");
 	};
 }

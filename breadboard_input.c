@@ -1,6 +1,7 @@
 #include "global_defines.h"
 #include "breadboard_input.h"
 #include "adc.h"
+#include "uart.h"
 #include <stdio.h>
 #include <avr/io.h>
 
@@ -29,7 +30,8 @@ void joystick_init()
 	joystick_offsets.y_max = 255;
 	joystick_offsets.y_min = 0;
 
-	clear_bit( DDRB, JOYSTICK_BUTTON_PIN );
+	clear_bit( DDRB, 1 );
+	set_bit( JOYSTICK_BUTTON_PORT, 1);
 	joy_last_button_value = 0;
 	
 	#ifdef JOYSTICK_CALIBRATE
@@ -124,7 +126,7 @@ int joystick_read_y(void){
 	return -(1-(float)((joystick_offsets.y_min - out))/(joystick_offsets.y_min - joystick_offsets.y_neutral))*100;
 }
 
-int joystick_read_button(void){
+uint8_t joystick_read_button(void){
 	/*int joy_new_button_value = !test_bit( JOYSTICK_BUTTON_PORT, JOYSTICK_BUTTON_PIN );
 	if (joy_new_button_value && !joy_last_button_value){
 		joy_last_button_value = joy_new_button_value;
@@ -135,7 +137,10 @@ int joystick_read_button(void){
 		return joy_new_button_value;
 	}
 	return 0;*/
-	return !test_bit( JOYSTICK_BUTTON_PORT, JOYSTICK_BUTTON_PIN ); 
+	uint8_t i = ((PORTB & (1 << 1)));
+	//uint8_t i = !! test_bit( JOYSTICK_BUTTON_PORT, JOYSTICK_BUTTON_PIN ); 
+	USART_printf("%d\n", i);
+	return i;
 }
 
 uint8_t slider_read_left(void){

@@ -5,11 +5,12 @@
 
 enum {init = 0};
 
+
 static int menu_branch;
 static int menu_page;
 
 #define NUM_OF_INIT_STRINGS		3
-const char* page_init[] = {"Eivind", "Robert", "Bendik"};
+const char* page_init[] = {"Eivind\n", "Robert\n", "Bendik\n"};
 
 //----------Local functions--------///
 static void draw_page_init();
@@ -35,9 +36,9 @@ void menu_draw(void){
 void draw_page_init(){
 	for (int i = 0; i < NUM_OF_INIT_STRINGS; i++){
 		if (i == menu_branch){
-			oled_print("->");
+			oled_printf("->");
 		}
-		oled_print(page_init[i]);
+		oled_printf("%s", page_init[i]);
 	}
 }
 

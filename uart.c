@@ -3,6 +3,8 @@
 #include <stdio.h>
 //typedef struct __file FILE
 
+static FILE uart_io = FDEV_SETUP_STREAM(USART_Transmit, USART_Receive, _FDEV_SETUP_RW);
+
 void USART_Init(unsigned int ubrr )
 {
 /*
@@ -65,5 +67,12 @@ unsigned int USART_Receive(void){
   return UDR0;
 }
 
+
+void USART_printf(const char* fmt, ...){
+  va_list args;
+  va_start(args, fmt);
+  vfprintf(&uart_io, fmt, args);
+  va_end(args);
+}
 
 //int fdevopen(void (*USART_Transmit), unsigned char (*USART_Receive));
