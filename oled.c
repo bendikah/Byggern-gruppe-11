@@ -15,6 +15,7 @@ static int current_row;
 static int current_col;
 static char char_size;
 
+
 void oled_initialize(void){
     volatile char *oled_int = (char *) OLED_COMMAND;
     *oled_int = 0xae;        //  display  off  
@@ -61,6 +62,7 @@ void oled_display_reset(){
 
 void oled_clear_screen(){
     oled_goto_column(0);
+    oled_goto_line(0);
     for (int j = 0; j < NUM_OF_PAGES; j++){
         oled_clear_line(j);
     }
@@ -76,6 +78,7 @@ void oled_clear_line(int row){
 }
 
 void oled_fill_screen(){
+    oled_goto_line(0);
     oled_goto_column(0);
     for (int j = 0; j < NUM_OF_PAGES; j++){
         oled_goto_line(j);
@@ -160,7 +163,7 @@ void oled_print(char* string){
 
 void oled_line(int x0, int y0, int x1, int y1){
     //do checks that the values are within the oled display.
-    //and happens if 0-value is bigger than 1-value?
+    //and happens if 0-value is bigger than 1-value? Than we can just flip the values and everything is fine
 
     int page0 = y0 / NUM_OF_PAGES;
     int bit0 = y0 % NUM_OF_PAGES;
@@ -197,3 +200,4 @@ void oled_line(int x0, int y0, int x1, int y1){
 void oled_circle(int x, int y, int r){
     return;
 }
+
