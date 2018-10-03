@@ -31,28 +31,29 @@ int main(void){
 
 	oled_initialize();
 //_delay_ms(5000);
-  //SRAM_test();
+  SRAM_test();
   //testThisShit();
   //test_adc();
 	struct Joystick_positions joy_pos;
 	menu_init();
 
 	while(1){
-		/*joy_pos = joystick_read_positions();
+		joy_pos = joystick_read_positions();
+    USART_printf("ting gårfremover y: %d og x: %d\n",joy_pos.y, joy_pos.x);
 		if (joy_pos.y >= 50){
 			menu_decrement_branch();
-			printf("Ting skjer de\n");
+			USART_printf("Ting skjer de\n");
 
 		} else if (joy_pos.y <= -50){
 			menu_increment_branch();
-			printf("Ting skjer in\n");
-		}*/
+			USART_printf("Ting skjer in\n");
+		}
 		if (joystick_read_button() == 1){
 			int variabel = get_menu_branch();
 			USART_printf("Dette funker? %d\n",variabel);
 		}
 		_delay_ms(500);
 		//printf("y-pos: %d\n", joy_pos.y);
-		USART_printf("ting gårfremover 2\n");
+		USART_printf("ting gårfremover2 y: %d og x: %d\n",joy_pos.y, joy_pos.x);
 	};
 }

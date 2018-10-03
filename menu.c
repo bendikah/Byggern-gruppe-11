@@ -10,7 +10,7 @@ static int menu_branch;
 static int menu_page;
 
 #define NUM_OF_INIT_STRINGS		3
-const char* page_init[] = {"Eivind\n", "Robert\n", "Bendik\n"};
+const char* page_init[] = {"Eivind\n", "Robert\n", "Arne\n"};
 
 //----------Local functions--------///
 static void draw_page_init();
@@ -22,8 +22,7 @@ void menu_init(){
 }
 
 void menu_draw(void){
-    oled_goto_line(0);
-    oled_goto_column(0);
+    oled_clear_screen();
 	switch(menu_page) {
         case init:
             draw_page_init();
@@ -43,11 +42,19 @@ void draw_page_init(){
 }
 
 void menu_increment_branch(){
+	if (menu_branch >= NUM_OF_INIT_STRINGS - 1){
+		return;
+	}
 	menu_branch++;
+	menu_draw();
 }
 
 void menu_decrement_branch(){
+	if (menu_branch <= 0){
+		return;
+	}
 	menu_branch--;
+	menu_draw();
 }
 
 int get_menu_branch(){

@@ -8,8 +8,8 @@
 enum Direction {LEFT, RIGHT, UP, DOWN, NEUTRAL};
 
 struct Joystick_positions {
-	uint8_t x;
-	uint8_t y;
+	int8_t x;
+	int8_t y;
 };
 
 struct Joystick_offsets {
