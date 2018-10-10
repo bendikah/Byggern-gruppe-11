@@ -1,6 +1,18 @@
 
 
 
-Når vi kobler databussen fra atmega til oled så funker ikke SRAM. Av og til så virker det som om test_SRAM bare stopper opp da den ikke printer no errormelding heller. Hvis vi kobler ut databussen til oled så funker det og test_SRAM gir 0 error. 
+Når vi kobler databussen fra atmega til oled så funker ikke SRAM. Av og til så virker det som om test_SRAM bare stopper opp da den ikke printer no errormelding heller. Hvis vi kobler ut databussen til oled så funker det og test_SRAM gir 0 error.
 
-Joystick position y gir alltid positivt resultat. 
+Joystick position y gir alltid positivt resultat.
+
+
+En ting jeg ikke får til er å definere defines fra spi til mcp_driver. Har dermed dobbeldefinert en del variabler som SPIPORT i begge filer noe som er dårlig praksis!
+FIKS pleeseeeese!
+
+Tror det kan være lurt å benytte et interrupt flagg for å lese fra canbussen. Kan se på etterhvert.
+
+
+Display har foreløpig ikke godkjent menusystem
+Forslag atm er noder til harware tester, display brightness, og highscore liste
+
+Anbefalt er å skrive direkte til display fra sram. Se på det når tid.

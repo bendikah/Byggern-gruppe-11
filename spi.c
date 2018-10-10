@@ -33,8 +33,13 @@ uint8_t spi_recieve(){
   return SPDR;
 }
 
+void spi_enable(void){
+    set_bit(PORTSPI,SS); // er dette motsatt???
+}
 
-
+void spi_disable(void){
+    clear_bit(PORTSPI,SS);
+}
 /*void spi_reset(){ //for later
 
 }*/

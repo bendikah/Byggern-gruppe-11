@@ -1,7 +1,9 @@
 #include "mcp_driver.h"
 #include "spi.h"
-#include "global_defines"
+#include "global_defines.h"
 #include <avr/io.h>
+#include <stdio.h>
+#include <stdint.h>
 
 #define MCP_READ 0x3
 #define MCP_WRITE 0x2
@@ -10,17 +12,23 @@
 #define MCP_BIT_MODIFY 0x5
 #define MCP_RESET 0xC0
 
+#define SS 4
+#define MOSI 5
+#define SCK 7
+#define PORTSPI PORTB
+
+
 uint8_t mcp_read(uint8_t address){
   clear_bit(PORTSPI,SS);
   spi_transmit(MCP_READ);
-  spi_transmit(address);uint8_t mcp_read(uint
+  spi_transmit(address);
   uint8_t read = spi_recieve();
   set_bit(PORTSPI, SS);
   return read;
 }
 
 void mcp_write(uint8_t address, uint8_t data){
-  clear_bit(PORTSPI,SS);uint8_t mcp_read(uint
+  clear_bit(PORTSPI,SS);
   spi_transmit(MCP_WRITE);
   spi_transmit(address);
   spi_transmit(data);
@@ -37,7 +45,7 @@ void mcp_request_to_send(uint8_t buffers){
 uint8_t mcp_status(){
   clear_bit(PORTSPI,SS);
   spi_transmit(MCP_READ_STATUS);
-  uint8_t status = spi_recieve()
+  uint8_t status = spi_recieve();
   set_bit(PORTSPI,SS);
   return status;
 }
