@@ -6,7 +6,7 @@
 typedef struct{
   int8_t id;
   uint8_t length;
-  uint8_t data[8] //8 bytes space in transmit registers of mcp 
+  uint8_t data[8]; //8 bytes space in transmit registers of mcp 
   } can_message;
 
 void can_init(uint8_t mode);
