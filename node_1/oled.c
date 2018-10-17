@@ -6,6 +6,7 @@
 #include "uart.h"
 #include <string.h>
 #include <stdio.h>
+#include "sram.h"
 
 
 #define OLED_COMMAND    0x1000
@@ -22,32 +23,38 @@ static FILE oled_io = FDEV_SETUP_STREAM(oled_put_c, NULL, _FDEV_SETUP_WRITE);
 
 void oled_initialize(void){
     volatile uint8_t *oled_int = (uint8_t *) OLED_COMMAND;
-    *oled_int = 0xae;        //  display  off  
-    *oled_int = 0xa1;        //segment  remap  
-    *oled_int = 0xda;        //common  pads  hardware:  alternative  
-    *oled_int = 0x12;  
-    *oled_int = 0xc8;        //common output scan direction:com63~com0 
-    *oled_int = 0xa8;        //multiplex  ration  mode:63  
-    *oled_int = 0x3f;  
-    *oled_int = 0xd5;        //display divide ratio/osc. freq. mode 
-    *oled_int = 0x80;          
-    *oled_int = 0x81;        //contrast  control    
-    *oled_int = 0x50;          
-    *oled_int = 0xd9;        //set  pre-charge  period  
-    *oled_int = 0x21;          
-    *oled_int = 0x20;        //Set  Memory  Addressing  Mode  
-    *oled_int = 0x02;          
-    *oled_int = 0xdb;        //VCOM  deselect  level  mode  
-    *oled_int = 0x30;          
-    *oled_int = 0xad;        //master  configuration    
-    *oled_int = 0x00;          
-    *oled_int = 0xa4;        //out  follows  RAM  content  
-    *oled_int = 0xa6;        //set  normal  display  
-    *oled_int = 0xaf;        //  display  on  
+    *oled_int = 0xae;        //  display  off
+    *oled_int = 0xa1;        //segment  remap
+    *oled_int = 0xda;        //common  pads  hardware:  alternative
+    *oled_int = 0x12;
+    *oled_int = 0xc8;        //common output scan direction:com63~com0
+    *oled_int = 0xa8;        //multiplex  ration  mode:63
+    *oled_int = 0x3f;
+    *oled_int = 0xd5;        //display divide ratio/osc. freq. mode
+    *oled_int = 0x80;
+    *oled_int = 0x81;        //contrast  control
+    *oled_int = 0x50;
+    *oled_int = 0xd9;        //set  pre-charge  period
+    *oled_int = 0x21;
+    *oled_int = 0x20;        //Set  Memory  Addressing  Mode
+    *oled_int = 0x02;
+    *oled_int = 0xdb;        //VCOM  deselect  level  mode
+    *oled_int = 0x30;
+    *oled_int = 0xad;        //master  configuration
+    *oled_int = 0x00;
+    *oled_int = 0xa4;        //out  follows  RAM  content
+    *oled_int = 0xa6;        //set  normal  display
+    *oled_int = 0xaf;        //  display  on
     //Initialize
 
+    // start Addressing Mode
+    *oled_int = 0x20;
+    *oled_int = 0x00;
+    *oled_int = 0x22;
+    *oled_int = 0x00;
+    *oled_int = 0x07;
 
-    //*oled_int = 0xa5; 
+    //*oled_int = 0xa5;
      //*oled_int = 0xa7;
 
     oled_goto_column(0);
@@ -56,7 +63,7 @@ void oled_initialize(void){
     oled_fill_screen();
     _delay_ms(1000);
     oled_clear_screen();
-    
+
 }
 
 
@@ -107,7 +114,7 @@ void oled_goto_line(uint8_t line)
 {
     current_row = line;
     oled_write_c(0xB0+line);
-    
+
 }
 
 void oled_goto_column(uint8_t column)
@@ -141,12 +148,29 @@ void oled_put_c(uint8_t c){
         return;
     }
 
-    c -= 32; 
+    c -= 32;
     for (uint8_t i = 0; i < oled_get_char_length(); i++){
         switch (char_size){
             case ('L'):
                 oled_write_d(pgm_read_byte(&(font8[c][i])));
-                break;
+                break;void oled_sram_put_noise(void){
+  for (int i =0; i < 8; i++){
+    for(int j = 0; j < 128; j++){
+      sram_write(i*128+j,j);
+    }
+  }
+}
+
+void oled_sram_update(void){
+    oled_clear_screen();
+    for (int i =0; i < 8; i++){
+      for(int j = 0; j < 128; j++){
+        volatile uint8_t *oled_data = (uint8_t *) OLED_DATA;
+        *oled_data = sram_read(i*128 + j);
+      }
+    }
+
+}
             case ('M'):
                 oled_write_d(pgm_read_byte(&(font5[c][i])));
                 break;
@@ -213,3 +237,21 @@ void oled_circle(uint8_t x, uint8_t y, uint8_t r){
     return;
 }
 
+void oled_sram_put_noise(void){
+  for (int i =0; i < 8; i++){
+    for(int j = 0; j < 128; j++){
+      sram_write(i*128+j,j);
+    }
+  }
+}
+
+void oled_sram_update(void){
+    oled_clear_screen();
+    for (int i =0; i < 8; i++){
+      for(int j = 0; j < 128; j++){
+        volatile uint8_t *oled_data = (uint8_t *) OLED_DATA;
+        *oled_data = sram_read(i*128 + j);
+      }
+    }
+
+}

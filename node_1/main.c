@@ -9,6 +9,7 @@
 #include "breadboard_input.h"
 #include "can.h"
 #include "test.h"
+#include "sram.h"
 
 //#define FOSC 1968500// Clock Speed
 #define BAUD 9600
@@ -59,11 +60,9 @@ int main(void){
   */
 
   can_message msg;
-  msg.id = 1;
+  msg.id = 0;
   msg.length = 3;
-  msg.data[0] = 1;
-  msg.data[1] = 2;
-  msg.data[2] = 3;
+  
   USART_printf("CAN TEST STARTING");
   can_init(1);
 
@@ -71,12 +70,21 @@ int main(void){
   while(1){
     can_transmit(&msg);
     _delay_ms(2000);
-    new_msg = can_recieve();
-    USART_printf("(can_msg_t){id:%x, len:%d, data:{",new_msg.id, new_msg.length);
-    for(int i = 0; i < msg.length; i++){
-  		  USART_printf(", %x", msg.data[i]);
-  	}
-    USART_printf("\n");
+    msg.data[0] = 2;
+    //new_msg = can_recieve();
+    //USART_printf("(can_msg_t){id:%x, len:%d, data:{",new_msg.id, new_msg.length);
+    //for(int i = 0; i < msg.length; i++){
+  	//	  USART_printf(", %x", msg.data[i]);
+  	//}
+    //USART_printf("\n");
+  }
+
+  oled_sram_put_noise();
+
+  oled_sram_update();
+  for (int j = 0; j < 10; j++){
+      USART_printf("%d",sram_read(j));
+      USART_printf("\n");
   }
 
 

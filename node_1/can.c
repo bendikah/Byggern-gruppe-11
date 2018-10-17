@@ -10,7 +10,14 @@
 void can_init(uint8_t mode){
     spi_initialize();
     mcp_reset();
-    mcp_bit_modify(MCP_CANCTRL,0xE0,MODE_LOOPBACK); //set mode in canctrl register for now loopback only 3 first bits count see 10.4 mcp
+    switch (mode) {
+      case 0:
+      mcp_bit_modify(MCP_CANCTRL,0xE0,MODE_LOOPBACK);
+      break;
+      case 1:
+      mcp_bit_modify(MCP_CANCTRL,0xE0,MODE_NORMAL);
+    }
+    //mcp_bit_modify(MCP_CANCTRL,0xE0,MODE_LOOPBACK); //set mode in canctrl register for now loopback only 3 first bits count see 10.4 mcp
     mcp_bit_modify(MCP_RXB0CTRL, 0x60, MCP_FILTER_OFF); //recieve all messages regardless of value see mcp 4.2.2
     mcp_bit_modify(MCP_RXB0CTRL, 0x04, MCP_ROLLOVER_OFF); //turn of overflow if 2 messages recieved
     mcp_bit_modify(MCP_CANINTE, 0xFF, MCP_NO_INT); //interrupt if message recieved on the __INT pin
