@@ -152,6 +152,7 @@ void oled_put_c(uint8_t c){
     for (uint8_t i = 0; i < oled_get_char_length(); i++){
         switch (char_size){
             case ('L'):
+
                 oled_write_d(pgm_read_byte(&(font8[c][i])));
                 break;
             case ('M'):
@@ -185,9 +186,32 @@ void oled_print(uint8_t* string){
 void oled_sram_put_noise(void){
   for (int i =0; i < 8; i++){
     for(int j = 0; j < 128; j++){
-      sram_write(i*128+j,j);
+      sram_write(i*128+j,0);
     }
   }
+}
+
+int col =40;
+int row = 0;
+void oled_sram_put_char(uint8_t c){
+    //oled_put_c(c);
+    c -= 32;
+    for(int i =0; i < 8; i++){
+    sram_write(row*128+col + i, pgm_read_byte(&font8[c][i]));
+
+    }
+    col += 8;
+}
+
+void oled_sram_print(uint8_t *data){
+    oled_sram_put_noise();
+    int i = 0;
+    while(data[i] != '\0'){
+      oled_sram_put_char(data[i]);
+      i++;
+    }
+
+    oled_sram_update();
 }
 
 void oled_sram_update(void){

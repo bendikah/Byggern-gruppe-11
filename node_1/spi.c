@@ -4,6 +4,7 @@
 
 void spi_initialize(){
 
+
   //Set outputs - MISO already defined input
   set_bit(DDRB, SS);
   set_bit(DDRB, MOSI);
@@ -30,6 +31,7 @@ void spi_transmit(uint8_t data){
 
 uint8_t spi_recieve(){
   spi_transmit('a'); //dummy send to receive newest value;
+  //while(!(SPSR &(1<<SPIF))); //should this be included?
   return SPDR;
 }
 

@@ -1,9 +1,12 @@
 #include "mcp_driver.h"
 #include "spi.h"
 #include "global_defines.h"
+#include "util/delay.h"
 #include <avr/io.h>
 #include <stdio.h>
 #include <stdint.h>
+#include "uart.h"
+#include "mcp_register.h"
 
 #define MCP_READ 0x3
 #define MCP_WRITE 0x2
@@ -20,7 +23,7 @@
 
 uint8_t mcp_read(uint8_t address){
   clear_bit(PORTSPI,SS);
-  spi_transmit(MCP_READ);
+  spi_transmit(0x03);
   spi_transmit(address);
   uint8_t read = spi_recieve();
   set_bit(PORTSPI, SS);
@@ -60,8 +63,15 @@ void mcp_bit_modify(uint8_t address, uint8_t mask_byte, uint8_t data){
 }
 
 void mcp_reset(){
+  USART_printf("reset start \n");
   clear_bit(PORTSPI,SS);
   spi_transmit(MCP_RESET);
   set_bit(PORTSPI,SS);
+  _delay_ms(10);
+  uint8_t readval = mcp_read(MCP_CANSTAT);
+  if ((readval & MODE_MASK) != MODE_CONFIG) {
+    USART_printf("MCP NOT in config mode after reset %d \n", readval);
+  }
+
 
 }
