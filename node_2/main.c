@@ -13,7 +13,10 @@ int main(void){
   USART_Init ( MYUBRR );
   set_bit(MCUCR,SRE);
   spi_initialize();
-  can_init(1);
+  mcp_reset();
+
+  can_init(0);
+
 
   can_message msg;
   msg.id = 1;
@@ -21,17 +24,17 @@ int main(void){
   msg.data[0] = 1;
   msg.data[1] = 2;
   msg.data[2] = 3;
-  USART_printf("CAN TEST STARTING");
+  USART_printf("CAN TEST STARTING \n");
   can_init(1);
 
   can_message new_msg;
   while(1){
-    //can_transmit(&msg);
+    can_transmit(&msg);
     _delay_ms(2000);
     new_msg = can_recieve();
     USART_printf("(can_msg_t){id:%x, len:%d, data:{",new_msg.id, new_msg.length);
-    for(int i = 0; i < msg.length; i++){
-  		  USART_printf(", %x", msg.data[i]);
+    for(int i = 0; i < new_msg.length; i++){
+  		  USART_printf(", %x", new_msg.data[i]);
   	}
     USART_printf("\n");
   }

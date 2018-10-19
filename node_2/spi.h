@@ -4,9 +4,10 @@
 #include <stdint.h>
 
 
-#define SS 4
-#define MOSI 5
-#define SCK 7
+#define SS 0
+#define MOSI 2
+#define SCK 1
+#define MISO 3
 #define PORTSPI PORTB
 
 void spi_initialize();

@@ -4,19 +4,22 @@
 #include <avr/io.h>
 #include <stdio.h>
 #include <stdint.h>
+#include "mcp_register.h"
+#include "uart.h"
+#include "util/delay.h"
 
-#define MCP_READ 0x3
-#define MCP_WRITE 0x2
+#define MCP_READ 0x03
+#define MCP_WRITE 0x02
 #define MCP_RTS   0x80
 #define MCP_READ_STATUS 0xA0
 #define MCP_BIT_MODIFY 0x5
 #define MCP_RESET 0xC0
-
-#define SS 4
-#define MOSI 5
-#define SCK 7
+/*
+#define SS 0
+#define MOSI 2
+#define SCK 1
 #define PORTSPI PORTB
-
+*/
 
 uint8_t mcp_read(uint8_t address){
   clear_bit(PORTSPI,SS);
@@ -63,5 +66,9 @@ void mcp_reset(){
   clear_bit(PORTSPI,SS);
   spi_transmit(MCP_RESET);
   set_bit(PORTSPI,SS);
-
+  _delay_ms(10);
+  uint8_t readval = mcp_read(MCP_CANSTAT);
+  if ((readval & MODE_MASK) != MODE_CONFIG) {
+    USART_printf("MCP NOT in config mode after reset %d \n", readval);
+  }
 }

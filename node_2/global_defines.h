@@ -1,5 +1,4 @@
-#define F_CPU 4915200
-
+#define F_CPU 16000000
 //#define FOSC 1968500// Clock Speed
 #define BAUD 9600
 #define MYUBRR F_CPU/16/BAUD-1
