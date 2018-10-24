@@ -14,6 +14,9 @@
 #define Y_AXIS			CHANNEL_4
 #define JOYSTICK_BUTTON_PORT	PORTB
 #define JOYSTICK_BUTTON_PIN		0
+#warning left an right button pin are random numbers. Hardware aint implemented yet.
+#define LEFT_BUTTON_PIN 		1
+#define RIGHT_BUTTON_PIN		2
 
 
 static struct Joystick_positions joystick_positions;
@@ -148,4 +151,10 @@ uint8_t slider_read_left(void){
 }
 uint8_t slider_read_right(void){
 	return adc_read(RIGHT_SLIDER);
+}
+uint8_t left_slider_read_button(void){
+	return !test_bit(PORTB, LEFT_BUTTON_PIN);
+}
+uint8_t right_slider_read_button(void){
+	return !test_bit(PORTB, RIGHT_BUTTON_PIN);
 }
