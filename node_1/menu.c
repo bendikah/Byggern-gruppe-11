@@ -1,38 +1,36 @@
 
 #include "menu.h"
+#include "menu_pages.h
 #include "oled.h"
 #include "global_defines.h"
 #include "util/delay.h"
 
 
-enum {init = 0, credits};
+
 
 
 static int menu_branch;
-static int menu_page;
+static struct menu_page* current_page;
 
-#define NUM_OF_INIT_STRINGS		4
-const char* page_init[] = {"Play", "High score", "Settings", "Credits"};
-#define NUM_OF_CREDIT_STRINGS	8
-const char* page_credits[] = {"Bernt Johan", "Vegard", "Kolbjørn", "Waseem", "Jo Arve", "Bendik", "Eivind", "Robert"};
+
 
 //----------Local functions--------///
-static void draw_page_init();
+static void draw_page_main();
 static void draw_page_credits();
 
 void menu_init(){
 	menu_branch = 0;
-	menu_page = init;
+	current_page = &page_main;
 	menu_draw();
 }
 
 void menu_draw(void){
     oled_clear_screen();
-	switch(menu_page) {
-        case init:
-            draw_page_init();
+	switch(current_page->index) {
+        case INIT:
+            draw_page_main();
             break;
-		case credits:
+		case CREDITS:
 			draw_page_credits();
 			break;
         default:
@@ -41,7 +39,7 @@ void menu_draw(void){
 }
 
 void menu_increment_branch(){
-	if (menu_branch >= NUM_OF_INIT_STRINGS - 1){
+	if (menu_branch >= current_page->num_of_strings - 1){
 		return;
 	}
 	menu_branch++;
@@ -60,12 +58,12 @@ int get_menu_branch(){
 	return menu_branch;
 }
 
-void draw_page_init(){
-	for (int i = 0; i < NUM_OF_INIT_STRINGS; i++){
+void draw_page_main(){
+	for (int i = 0; i < page_main.num_of_strings ; i++){
 		if (i == menu_branch){
 			oled_printf("->");
 		}
-		oled_printf("%s\n", page_init[i]);
+		oled_printf("%s\n", page_main.strings[i]);
 	}
 }
 
@@ -90,4 +88,7 @@ void draw_page_credits(){
 		_delay_ms(500);
 	}
 
-}
+}/* To make it more starwars look-a-like we can have one line between the strings. And print the same
+ * string row twice, but left and right shit to get the ends meeting.
+ * Robert, your an amazing detective-slash-genius
+ */
