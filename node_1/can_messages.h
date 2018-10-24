@@ -3,9 +3,6 @@
 
 #include "can.h"
 
-struct can_message msg_joy_positions = {
-  .id = 0x333;
-  .length = 3; // byte 0 = x-position, byte 1 = y-position
-}
+can_message msg_joy_positions;
 
 #endif /* CAN_MESSAGES_H_ */

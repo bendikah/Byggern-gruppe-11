@@ -8,12 +8,8 @@
 #include "uart.h"
 #include "mcp_register.h"
 
-#define MCP_READ 0x3
-#define MCP_WRITE 0x2
-#define MCP_RTS   0x80
-#define MCP_READ_STATUS 0xA0
-#define MCP_BIT_MODIFY 0x5
-#define MCP_RESET 0xC0
+
+
 
 #define SS 4
 #define MOSI 5

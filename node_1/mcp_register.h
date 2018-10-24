@@ -167,6 +167,10 @@ Copyright 2003 Kimberly Otten Software Consulting
 #define MCP_WAKIF		0x40
 #define MCP_MERRF		0x80
 
+//
+#define MCP_RTS   0x80
+#define MCP_BIT_MODIFY 0x5
+
 
 
 #endif

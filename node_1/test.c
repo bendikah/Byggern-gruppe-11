@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include "uart.h"
 #include "util/delay.h"
-
+#include "can.h"
 
 void testThisShit(void){
 	DDRA = 0xFF;
@@ -42,4 +42,33 @@ void test_latch(void){
 	_delay_ms(5000);
 	set_bit(PORTE,1);
 
+}
+
+void test_can(void){
+	can_init(1);
+
+	can_message msg;
+  msg.id = 1;
+  msg.length = 3;
+  msg.data[0] = 7;
+  msg.data[1] = 2;
+  msg.data[2] = 0;
+
+	USART_printf("CAN TEST STARTING");
+
+  can_message new_msg;
+  int i = 0;
+  while(1){
+    msg.data[2] = i;
+    i++;
+    can_transmit(&msg);
+    _delay_ms(2000);
+
+    can_recieve(&new_msg);
+    USART_printf("(can_msg_t){id:%x, len:%d, data:{",new_msg.id, new_msg.length);
+    for(int i = 0; i < new_msg.length; i++){
+  		  USART_printf(", %x", new_msg.data[i]);
+  	}
+		USART_printf("\n");
+}
 }

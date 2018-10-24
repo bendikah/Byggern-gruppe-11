@@ -19,8 +19,8 @@ void can_init(uint8_t mode){
     }
 
     uint8_t readval = mcp_read(MCP_CANSTAT);
-    if ((readval & MODE_MASK) != MODE_LOOPBACK) {
-      USART_printf("MCP NOT in loopback mode after init %d \n", readval);
+    if ((readval & MODE_MASK) != MODE_NORMAL) {
+      USART_printf("MCP NOT in Normal mode after init %d \n", readval);
     }
 
     mcp_bit_modify(MCP_RXB0CTRL, 0x60, MCP_FILTER_OFF); //recieve all messages regardless of value see mcp 4.2.2
