@@ -1,5 +1,5 @@
-#ifndef SPI_H
-#define SPI_H
+#ifndef MCP_DRIVER_H
+#define MCP_DRIVER_H
 #include <avr/io.h>
 
 uint8_t mcp_read(uint8_t address);

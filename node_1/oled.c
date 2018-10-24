@@ -152,25 +152,9 @@ void oled_put_c(uint8_t c){
     for (uint8_t i = 0; i < oled_get_char_length(); i++){
         switch (char_size){
             case ('L'):
+
                 oled_write_d(pgm_read_byte(&(font8[c][i])));
-                break;void oled_sram_put_noise(void){
-  for (int i =0; i < 8; i++){
-    for(int j = 0; j < 128; j++){
-      sram_write(i*128+j,j);
-    }
-  }
-}
-
-void oled_sram_update(void){
-    oled_clear_screen();
-    for (int i =0; i < 8; i++){
-      for(int j = 0; j < 128; j++){
-        volatile uint8_t *oled_data = (uint8_t *) OLED_DATA;
-        *oled_data = sram_read(i*128 + j);
-      }
-    }
-
-}
+                break;
             case ('M'):
                 oled_write_d(pgm_read_byte(&(font5[c][i])));
                 break;
@@ -197,52 +181,37 @@ void oled_print(uint8_t* string){
     }
 }*/
 
-void oled_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1){
-    //do checks that the values are within the oled display.
-    //and happens if 0-value is bigger than 1-value? Than we can just flip the values and everything is fine
 
-    uint8_t page0 = y0 / NUM_OF_PAGES;
-    uint8_t bit0 = y0 % NUM_OF_PAGES;
-    uint8_t page1 = y1 / NUM_OF_PAGES;
-    uint8_t bit1 = y1 % NUM_OF_PAGES;
-
-    oled_goto_column(x0);
-    oled_goto_line(page0);
-
-    if (x0 == x1){ //line is vertical
-        oled_write_d((0b11111111 << bit0) & 0b11111111);
-        oled_goto_line(current_row+1);
-        for (uint8_t i = page0 + 1; i < page1; i++){
-            oled_write_d(0b11111111);
-            oled_goto_line(current_row+1);
-        }
-        oled_write_d((0b11111111 >> bit1) & 0b11111111);
-    }
-    else if (y0 == y1){ //line is horisontal
-        for (uint8_t i = x0; i <= x1; i++){
-            oled_write_d(1 << bit0);
-        }
-    }
-    else{ //line is diagonal
-        uint8_t dy = y1 - y0;
-        uint8_t dx = x1 - x0;
-        uint8_t gradient = ((float)dy)/dx;
-        if (dy > dx){
-            return;
-        }
-    }
-}
-
-void oled_circle(uint8_t x, uint8_t y, uint8_t r){
-    return;
-}
 
 void oled_sram_put_noise(void){
   for (int i =0; i < 8; i++){
     for(int j = 0; j < 128; j++){
-      sram_write(i*128+j,j);
+      sram_write(i*128+j,0);
     }
   }
+}
+
+int col =40;
+int row = 0;
+void oled_sram_put_char(uint8_t c){
+    //oled_put_c(c);
+    c -= 32;
+    for(int i =0; i < 8; i++){
+    sram_write(row*128+col + i, pgm_read_byte(&font8[c][i]));
+
+    }
+    col += 8;
+}
+
+void oled_sram_print(uint8_t *data){
+    oled_sram_put_noise();
+    int i = 0;
+    while(data[i] != '\0'){
+      oled_sram_put_char(data[i]);
+      i++;
+    }
+
+    oled_sram_update();
 }
 
 void oled_sram_update(void){
@@ -253,5 +222,4 @@ void oled_sram_update(void){
         *oled_data = sram_read(i*128 + j);
       }
     }
-
 }

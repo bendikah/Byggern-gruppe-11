@@ -8,12 +8,14 @@ void spi_initialize(){
   set_bit(DDRB, SS);
   set_bit(DDRB, MOSI);
   set_bit(DDRB, SCK);
+  //clear_bit(DDRB, MISO);
 
   set_bit(PORTSPI, SS);
   //set master Mode
   set_bit(SPCR,MSTR); //MSTR = bit4
   set_bit(SPCR,SPE); //SPE = 6
   set_bit(SPCR,SPR0); //SPR0 = 0 SCK frequenzy
+  //set_bit(SPCR,SPR1);
 
 }
 

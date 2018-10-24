@@ -4,23 +4,19 @@
 #include "test_sram.h"
 #include "oled.h"
 #include "menu.h"
-#define F_CPU 4915200
+#include "global_defines.h"
 #include "util/delay.h"
 #include "breadboard_input.h"
 #include "can.h"
 #include "test.h"
 #include "sram.h"
+#include "mcp_driver.h"
 
-//#define FOSC 1968500// Clock Speed
-#define BAUD 9600
-#define MYUBRR F_CPU/16/BAUD-1
+#include "interrupt.h"
+#include "joy_can.h"
+#include <avr/interrupt.h>
 
-#define set_bit(reg, bit) (reg |= (1 << bit))
-#define clear_bit( reg, bit ) (reg &= ~(1 << bit))
-#define test_bit( reg, bit ) (reg & (1 << bit))
-#define loop_until_bit_is_set( reg, bit ) while( !test_bit( reg, bit ) )
-#define loop_until_bit_is_clear( reg, bit ) while( test_bit( reg, bit ) )
-
+#include "spi.h"
 
 int main(void){
   //DDRA = 0xFF;
@@ -28,64 +24,56 @@ int main(void){
   set_bit(MCUCR,SRE);
   //set_bit(MCUCR, ISC01);
   //fdevopen(USART_Transmit, USART_Receive);
-  joystick_init();
+  //joystick_init();
 
 	oled_initialize();
 //_delay_ms(5000);
   SRAM_test();
   //testThisShit();
   //test_adc();
-	struct Joystick_positions joy_pos;
-	menu_init();
-/*
-	while(1){
-		joy_pos = joystick_read_positions();
-    USART_printf("ting gårfremover y: %d og x: %d\n",joy_pos.y, joy_pos.x);
-		if (joy_pos.y >= 50){
-			menu_decrement_branch();
-			USART_printf("Ting skjer de\n");
+//menu_init();
+  USART_printf("STARTING \n");
+  oled_sram_print("hello world");
 
-		} else if (joy_pos.y <= -50){
-			menu_increment_branch();
-			USART_printf("Ting skjer in\n");
-		}
-		if (joystick_read_button() == 1){
-			int variabel = get_menu_branch();
-			USART_printf("Dette funker? %d\n",variabel);
-		}
-		_delay_ms(500);
-		//printf("y-pos: %d\n", joy_pos.y);
-		USART_printf("ting gårfremover2 y: %d og x: %d\n",joy_pos.y, joy_pos.x);
-	};
+  //can_init(1);
+
+  //github solution mcp
+  /*
+  while(1){
+    _delay_ms(2000);
+  mcp2515_init();
+  }
+  */
+  // our mcp_driver
+
+  //mcp_write(MCP_TXB0CTRL,0xFF);
+  /*spi_initialize();
+  mcp_reset();
+  while(1){
+    _delay_ms(2000);
+    mcp_write(0x03, 0x7D);
+    uint8_t ret = mcp_read(0x03);
+    USART_printf("%x",ret);
+  }
+  uint8_t readval = mcp_status();
+  USART_printf("this is the shit from mcp %x",readval);
+
   */
 
-  can_message msg;
-  msg.id = 0;
-  msg.length = 3;
-  
-  USART_printf("CAN TEST STARTING");
+
+  //testing interrupt
+  interrupt_init();
+
+  //testing can
+  //test_can();
+
+  USART_printf("test Servo\n");
   can_init(1);
-
-  can_message new_msg;
+  joystick_init();
+  //Servo test
   while(1){
-    can_transmit(&msg);
-    _delay_ms(2000);
-    msg.data[0] = 2;
-    //new_msg = can_recieve();
-    //USART_printf("(can_msg_t){id:%x, len:%d, data:{",new_msg.id, new_msg.length);
-    //for(int i = 0; i < msg.length; i++){
-  	//	  USART_printf(", %x", msg.data[i]);
-  	//}
-    //USART_printf("\n");
+  _delay_ms(1000);
+  joy_send_pos();
   }
-
-  oled_sram_put_noise();
-
-  oled_sram_update();
-  for (int j = 0; j < 10; j++){
-      USART_printf("%d",sram_read(j));
-      USART_printf("\n");
-  }
-
 
 }

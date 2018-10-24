@@ -139,7 +139,7 @@ uint8_t joystick_read_button(void){
 	return 0;*/
 	uint8_t i = !((PINB & (1 << 1)));
 	//uint8_t i = !! test_bit( JOYSTICK_BUTTON_PORT, JOYSTICK_BUTTON_PIN );
-	USART_printf("%d\n", i);
+	
 	return i;
 }
 

@@ -10,6 +10,7 @@
 void can_init(uint8_t mode){
     spi_initialize();
     mcp_reset();
+
     switch (mode) {
       case 0:
       mcp_bit_modify(MCP_CANCTRL,0xE0,MODE_LOOPBACK);
@@ -17,10 +18,16 @@ void can_init(uint8_t mode){
       case 1:
       mcp_bit_modify(MCP_CANCTRL,0xE0,MODE_NORMAL);
     }
+
+    uint8_t readval = mcp_read(MCP_CANSTAT);
+    if ((readval & MODE_MASK) != MODE_NORMAL) {
+      USART_printf("MCP NOT in config mode after reset %d \n", readval);
+    }
+
     //mcp_bit_modify(MCP_CANCTRL,0xE0,MODE_LOOPBACK); //set mode in canctrl register for now loopback only 3 first bits count see 10.4 mcp
     mcp_bit_modify(MCP_RXB0CTRL, 0x60, MCP_FILTER_OFF); //recieve all messages regardless of value see mcp 4.2.2
     mcp_bit_modify(MCP_RXB0CTRL, 0x04, MCP_ROLLOVER_OFF); //turn of overflow if 2 messages recieved
-    mcp_bit_modify(MCP_CANINTE, 0xFF, MCP_NO_INT); //interrupt if message recieved on the __INT pin
+    mcp_bit_modify(MCP_CANINTE, 0xFF, MCP_RX_INT); //interrupt if message recieved on the __INT pin
 }
 
 void can_transmit(can_message* msg){
@@ -39,18 +46,18 @@ void can_transmit(can_message* msg){
 			mcp_write(MCP_TXB0D0 + i, msg->data[i]);
       }
 
-    mcp_request_to_send(0);
+    mcp_request_to_send(1);
 }
 
-can_message can_recieve(void){
-    can_message msg;
+void can_recieve(can_message* msg){
 
     if (mcp_read(MCP_CANINTF) & (MCP_RX0IF)){ // if something on the channel
+        USART_printf("get some message");
         //Get message id
-      msg.id = (mcp_read(MCP_RXB0SIDH) << 3) | (mcp_read(MCP_RXB0SIDL) >> 5);
-		  msg.length = (mcp_read(MCP_RXB0DLC)) & (0x0F);
-		  for (uint8_t i = 0; i < msg.length; i++){
-			       msg.data[i] = mcp_read(MCP_RXB0D0 + i);
+      msg->id = (mcp_read(MCP_RXB0SIDH) << 3) | (mcp_read(MCP_RXB0SIDL) >> 5);
+		  msg->length = (mcp_read(MCP_RXB0DLC)) & (0x0F);
+		  for (uint8_t i = 0; i < msg->length; i++){
+			       msg->data[i] = mcp_read(MCP_RXB0D0 + i);
 		}
     mcp_bit_modify(MCP_CANINTF, MCP_RX0IF, 0x00); //turn off interrupt of recieved
 
@@ -58,7 +65,6 @@ can_message can_recieve(void){
 
     }
 
-    return msg;
 
 }
 

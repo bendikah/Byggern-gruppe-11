@@ -16,3 +16,12 @@ Display har foreløpig ikke godkjent menusystem
 Forslag atm er noder til harware tester, display brightness, og highscore liste
 
 Anbefalt er å skrive direkte til display fra sram. Se på det når tid.
+
+
+Note 19.10
+RTR REMOTE TRANSMISSION REQUEST BIT
+
+
+Oppgave 6, oppgave 2: Det står man kan koble til en ledning hvis ma ønsker å bruke interupts. Hva brukes dette interuptet til? Og hva er CANINTF-registeret som vi må sette lavt?
+
+Oppgave 7.1. Hva er timer interupt? Hva brukes det til

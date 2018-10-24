@@ -18,9 +18,13 @@ uint8_t oled_get_char_length();
 void oled_put_c(uint8_t c);
 __attribute__((format(printf,1,2))) void oled_printf(const char* fmt, ...);
 
-void oled_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1);
-void oled_circle(uint8_t x, uint8_t y, uint8_t r);
+
+
+void oled_sram_put_char(uint8_t c);
+void oled_sram_print(uint8_t *data);
+void oled_sram_put_noise(void);
+
+void oled_sram_update(void);
 
 
 #endif
-
