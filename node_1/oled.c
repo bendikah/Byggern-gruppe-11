@@ -147,7 +147,9 @@ void oled_put_c(uint8_t c){
         oled_goto_column(0);
         return;
     }
-
+    if (c == 'h'){
+      USART_printf("current row: %i\n", current_row);
+    }
     c -= 32;
     for (uint8_t i = 0; i < oled_get_char_length(); i++){
         switch (char_size){
@@ -181,45 +183,80 @@ void oled_print(uint8_t* string){
     }
 }*/
 
+/*-------------Under her is oled writing through the sram------------------*/
 
 
-void oled_sram_put_noise(void){
+void oled_sram_put_noise(void){ //aha..... hva er denne funksjonen for? Er ikek dette bare en clear sram_screen?
   for (int i =0; i < 8; i++){
     for(int j = 0; j < 128; j++){
-      sram_write(i*128+j,0);
+      sram_write(i*128+j,1);
     }
   }
 }
 
-int col =40;
-int row = 0;
-void oled_sram_put_char(uint8_t c){
-    //oled_put_c(c);
-    c -= 32;
-    for(int i =0; i < 8; i++){
-    sram_write(row*128+col + i, pgm_read_byte(&font8[c][i]));
-
-    }
-    col += 8;
+void oled_sram_clear_screen(void){
+  for (int i = 0; i < 1024; i++){
+    sram_write(i,0);
+  }
 }
 
-void oled_sram_print(uint8_t *data){
-    oled_sram_put_noise();
-    int i = 0;
+void oled_sram_put_char(uint8_t c){
+
+    //oled_put_c(c);
+    /*c -= 32;
+    for(int i =0; i < 8; i++){
+      sram_write(current_row*128+current_col + i, pgm_read_byte(&font8[c][i]));
+    }*/
+    if (c == '\n'){
+        current_row++;
+        current_row %= NUM_OF_PAGES;
+        oled_goto_line(current_row);
+        oled_goto_column(0);
+        return;
+    }
+
+    c -= 32;
+    for (uint8_t i = 0; i < oled_get_char_length(); i++){
+        switch (char_size){
+            case ('L'):
+                sram_write(current_row*NUM_OF_COLUMNS + current_col, pgm_read_byte(&(font8[c][i])));
+                break;
+            case ('M'):
+                sram_write(current_row*NUM_OF_COLUMNS + current_col, pgm_read_byte(&(font5[c][i])));
+                break;
+            case ('S'):
+                sram_write(current_row*NUM_OF_COLUMNS + current_col, pgm_read_byte(&(font4[c][i])));
+                break;
+        }
+        USART_printf("Im in oled_sram_put_c and putting a byte\n");
+        USART_printf("row: %i, col: %i\n",current_row, current_col);
+        current_col++;
+    }
+}
+
+void oled_sram_print(char *string){
+    /* 0 int i = 0;
     while(data[i] != '\0'){
       oled_sram_put_char(data[i]);
       i++;
+    }*/
+    for (uint8_t i = 0; i < strlen(string); i++){
+        oled_sram_put_char(string[i]);
     }
-
-    oled_sram_update();
 }
 
 void oled_sram_update(void){
     oled_clear_screen();
+    volatile uint8_t *oled_data = (uint8_t *) OLED_DATA;
+    uint8_t temp;
+    /*for (int i = 0; i < 1024; i++){
+      *oled_data = sram_read(i);
+    }*/
     for (int i =0; i < 8; i++){
+      USART_printf("%i \n",sram_read(i*128));
       for(int j = 0; j < 128; j++){
-        volatile uint8_t *oled_data = (uint8_t *) OLED_DATA;
-        *oled_data = sram_read(i*128 + j);
+        temp = sram_read(i*128+j);
+        *oled_data = temp;
       }
     }
 }

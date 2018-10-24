@@ -33,8 +33,16 @@ int main(void){
   //test_adc();
 //menu_init();
   USART_printf("STARTING \n");
-  oled_sram_print("hello world");
-
+  oled_printf("hello world");
+  _delay_ms(1000);
+  oled_sram_clear_screen();
+  oled_sram_update();
+  _delay_ms(1000);
+  //oled_sram_print("heisann");
+  oled_sram_put_char('h');
+  oled_sram_update();
+  oled_sram_clear_screen();
+  USART_printf("sram_value: %x\n",sram_read(2*128));
   //can_init(1);
 
   //github solution mcp
@@ -62,18 +70,18 @@ int main(void){
 
 
   //testing interrupt
-  interrupt_init();
+  //interrupt_init();
 
   //testing can
   //test_can();
 
-  USART_printf("test Servo\n");
-  can_init(1);
-  joystick_init();
+  //USART_printf("test Servo\n");
+  //can_init(1);
+  //joystick_init();
   //Servo test
   while(1){
   _delay_ms(1000);
-  joy_send_pos();
+  //joy_send_pos();
   }
 
 }
