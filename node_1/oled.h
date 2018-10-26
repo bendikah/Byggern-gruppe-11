@@ -26,5 +26,13 @@ void oled_sram_put_noise(void);
 
 void oled_sram_update(void);
 
+/*
+ * Put_char functions below should be static in the c-file
+ */
+void oled_sram_put_char_up_shifted(uint8_t c, int shift_bits);
+void oled_sram_put_char_down_shifted(uint8_t c, int shift_bits);
+
+void oled_sram_print_up_shifted(uint8_t* data, int shift_bits);
+void oled_sram_print_down_shifted(uint8_t* data, int shift_bits);
 
 #endif
