@@ -68,7 +68,7 @@ void draw_page_init(){
 		oled_printf("%s\n", page_init[i]);
 	}
 }
-
+/*
 void draw_page_credits(){
 	for (int i = 7; i >= 0; i--){
 		for (int j = 0; j < 8 - i; j++){
@@ -90,4 +90,48 @@ void draw_page_credits(){
 		_delay_ms(500);
 	}
 
+}*/
+
+void draw_page_credits(){
+    for (int i = 7; i >= 0; i--){ //start line
+        for (int j = 0; j < 8 - i; j++){ //from startline to bottom
+            oled_goto_line(j+i);
+            for (int shiftbits = 7; shiftbits > 0; shiftbits--){ //number of bits shifted
+                if ((i+j)%2 == 1){
+                    oled_sram_print_down_shifted(page_credits[j], shiftbits);
+                }
+                else if ((i+j)%2 == 0) {
+                    oled_sram_print_up_shifted(page_credits[j], 8 - shiftbits);
+                }
+                _delay_ms(250);
+            }
+            if ((j)%2 == 0){
+                oled_sram_print(page_credits[j]);
+            }
+            _delay_ms(250);
+        }
+    }
+    for (int i = 0; i < NUM_OF_CREDIT_STRINGS; i++){ //iterate through all strings
+        for (int j = 0; j < 8; j++){ //iterate through rows
+            if (i+j >= NUM_OF_CREDIT_STRINGS){
+                continue;
+            }
+            oled_goto_line(j);
+            for (int shiftbits = 7; shiftbits > 0; shiftbits--){ //number of bits shifted
+                if ((i+j)%2 == 1){
+                    oled_sram_print_down_shifted(page_credits[i+j], shiftbits);
+                }
+                else if ((i+j)%2 == 0) {
+                    oled_sram_print_up_shifted(page_credits[i+j], 8 - shiftbits);
+                }
+                _delay_ms(250);
+            }
+            if ((i+j)%2 == 1){
+                oled_sram_print(page_credits[i+j]);
+            }
+            _delay_ms(250);
+        }
+    }
+    _delay_ms(1000);
+    #warning go to the previous page at en of function
 }
