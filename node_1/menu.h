@@ -14,5 +14,6 @@ void menu_decrement_branch();
 int get_menu_branch();
 
 void menu_next_page();
+void menu_previous_page();
 
 #endif

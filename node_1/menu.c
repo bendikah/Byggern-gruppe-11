@@ -92,3 +92,18 @@ void draw_page_credits(){
  * string row twice, but left and right shit to get the ends meeting.
  * Robert, your an amazing detective-slash-genius
  */
+
+void menu_next_page(){
+    if (current_page->children != NULL){
+        current_page = current_page->children[menu_branch];
+        menu_branch = 0;
+    }
+    return;
+}
+void menu_previous_page(){
+    if (current_page->parent != NULL) {
+        current_page = current_page->parent;
+        menu_branch = 0;
+    }
+    return;
+}
