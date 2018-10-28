@@ -33,8 +33,8 @@ int main(void){
   //test_adc();
 //menu_init();
   USART_printf("STARTING \n");
-  oled_sram_print("hello world");
-
+  //oled_sram_print("hello world");
+menu_init();
   //can_init(1);
 
   //github solution mcp

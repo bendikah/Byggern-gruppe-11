@@ -48,12 +48,12 @@ void oled_initialize(void){
     //Initialize
 
     // start Addressing Mode
-    *oled_int = 0x20;
+    /**oled_int = 0x20;
     *oled_int = 0x00;
     *oled_int = 0x22;
     *oled_int = 0x00;
     *oled_int = 0x07;
-
+*/
     //*oled_int = 0xa5;
      //*oled_int = 0xa7;
 

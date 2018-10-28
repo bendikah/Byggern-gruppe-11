@@ -14,7 +14,7 @@ static int menu_page;
 #define NUM_OF_INIT_STRINGS		4
 const char* page_init[] = {"Play", "High score", "Settings", "Credits"};
 #define NUM_OF_CREDIT_STRINGS	8
-const char* page_credits[] = {"Bernt Johan", "Vegard", "Kolbjørn", "Waseem", "Jo Arve", "Bendik", "Eivind", "Robert"};
+const char* page_credits[] = {"Bernt Johan", "Vegard", "Kolbjorn", "Waseem", "Jo Arve", "Bendik", "Eivind", "Robert"};
 
 //----------Local functions--------///
 static void draw_page_init();
@@ -22,7 +22,7 @@ static void draw_page_credits();
 
 void menu_init(){
 	menu_branch = 0;
-	menu_page = init;
+	menu_page = credits;
 	menu_draw();
 }
 
@@ -68,30 +68,34 @@ void draw_page_init(){
 		oled_printf("%s\n", page_init[i]);
 	}
 }
-/*
+
 void draw_page_credits(){
 	for (int i = 7; i >= 0; i--){
 		for (int j = 0; j < 8 - i; j++){
 			oled_goto_line(i + j);
-			oled_sram_print(page_credits[j]);
+			oled_goto_column(0);
+			oled_printf(page_credits[j]);
 		}
-		oled_sram_update();
+		//oled_sram_update();
 		_delay_ms(500);
+		oled_clear_screen();
 	}
 	for (int i = 1; i < NUM_OF_CREDIT_STRINGS; i++){
 		for (int j = 0; j < 8 ; j++){
 			oled_goto_line(j);
+			oled_goto_column(0);
 			if (i + j >= NUM_OF_CREDIT_STRINGS){
 				break;
 			}
-			oled_sram_print(page_credits[i + j]);
+			oled_printf(page_credits[i + j]);
 		}
-		oled_sram_update();
+		//oled_sram_update();
 		_delay_ms(500);
+		oled_clear_screen();
 	}
 
-}*/
-
+}
+/*
 void draw_page_credits(){
     for (int i = 7; i >= 0; i--){ //start line
         for (int j = 0; j < 8 - i; j++){ //from startline to bottom
@@ -134,4 +138,4 @@ void draw_page_credits(){
     }
     _delay_ms(1000);
     #warning go to the previous page at en of function
-}
+}*/
