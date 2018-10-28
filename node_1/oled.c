@@ -184,7 +184,7 @@ void oled_print(uint8_t* string){
 }*/
 
 /*-------------Under her is oled writing through the sram------------------*/
-
+/*
 
 void oled_sram_put_noise(void){ //aha..... hva er denne funksjonen for? Er ikek dette bare en clear sram_screen?
   for (int i =0; i < 8; i++){
@@ -206,7 +206,7 @@ void oled_sram_put_char(uint8_t c){
     /*c -= 32;
     for(int i =0; i < 8; i++){
       sram_write(current_row*128+current_col + i, pgm_read_byte(&font8[c][i]));
-    }*/
+    }
     if (c == '\n'){
         current_row++;
         current_row %= NUM_OF_PAGES;
@@ -234,12 +234,20 @@ void oled_sram_put_char(uint8_t c){
     }
 }
 
+void oled_fill_screen_horizontal(){
+  volatile uint8_t *oled_data = (uint8_t *) OLED_DATA;
+  for (int i = 0; i < 1024; i++){
+    *oled_data = 0xff;
+  }
+}
+
+
 void oled_sram_print(char *string){
     /* 0 int i = 0;
     while(data[i] != '\0'){
       oled_sram_put_char(data[i]);
       i++;
-    }*/
+    }
     for (uint8_t i = 0; i < strlen(string); i++){
         oled_sram_put_char(string[i]);
     }
@@ -251,12 +259,13 @@ void oled_sram_update(void){
     uint8_t temp;
     /*for (int i = 0; i < 1024; i++){
       *oled_data = sram_read(i);
-    }*/
+    }
     for (int i =0; i < 8; i++){
-      USART_printf("%i \n",sram_read(i*128));
+      //USART_printf("%i \n",sram_read(i*128));
       for(int j = 0; j < 128; j++){
         temp = sram_read(i*128+j);
         *oled_data = temp;
       }
     }
 }
+*/

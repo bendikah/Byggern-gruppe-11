@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include "uart.h"
 #include "test_sram.h"
-#include "oled.h"
 #include "menu.h"
 #include "global_defines.h"
 #include "util/delay.h"
@@ -15,7 +14,7 @@
 #include "interrupt.h"
 #include "joy_can.h"
 #include <avr/interrupt.h>
-
+#include "oled_sram.h"
 #include "spi.h"
 
 int main(void){
@@ -25,18 +24,36 @@ int main(void){
   //set_bit(MCUCR, ISC01);
   //fdevopen(USART_Transmit, USART_Receive);
   //joystick_init();
-
-	oled_initialize();
-//_delay_ms(5000);
   SRAM_test();
+	oled_sram_initialize();
+//_delay_ms(5000);
+  //SRAM_test();
   //testThisShit();
   //test_adc();
 //menu_init();
+uint8_t rand = 0;
+for (uint16_t i = 240; i<270; i++){
+  sram_write(i,rand);
+  USART_printf("rand value %i \n",sram_read(i));
+  rand ++;
+}
+uint16_t test = 0;
+sram_write(test,rand);
+USART_printf("rand value %i \n",sram_read(test));
+
+_delay_ms(2000);
+test = 255;
+uint8_t test_2 = 2;
+  sram_write(test,test_2);
+  USART_printf("sram_value: %d\n",sram_read(test));
   USART_printf("STARTING \n");
-  oled_printf("hello world");
-  _delay_ms(1000);
+  /*oled_fill_screen_horizontal();
+  USART_printf("sram_value: %x\n",sram_read(test));
+  _delay_ms(4000);
   oled_sram_clear_screen();
+  USART_printf("sram_value: %x\n",sram_read(test));
   oled_sram_update();
+  USART_printf("sram_value: %x\n",sram_read(2*128));
   _delay_ms(1000);
   //oled_sram_print("heisann");
   oled_sram_put_char('h');
@@ -44,7 +61,7 @@ int main(void){
   oled_sram_clear_screen();
   USART_printf("sram_value: %x\n",sram_read(2*128));
   //can_init(1);
-
+*/
   //github solution mcp
   /*
   while(1){

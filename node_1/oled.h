@@ -26,6 +26,6 @@ void oled_sram_put_noise(void);
 void oled_sram_clear_screen(void);
 
 void oled_sram_update(void);
-
+void oled_fill_screen_horizontal();
 
 #endif
