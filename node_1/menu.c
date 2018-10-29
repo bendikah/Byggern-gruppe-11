@@ -1,9 +1,12 @@
 
 #include "menu.h"
-#include "menu_pages.h
+#include "menu_pages.h"
 #include "oled.h"
 #include "global_defines.h"
 #include "util/delay.h"
+#include <stdint.h>
+
+
 
 
 
@@ -27,14 +30,14 @@ void menu_init(){
 void menu_draw(void){
     oled_clear_screen();
 	switch(current_page->index) {
-        case INIT:
+        case MAIN:
             draw_page_main();
             break;
 		case CREDITS:
 			draw_page_credits();
 			break;
         default:
-            draw_page_init();
+            draw_page_main();
 	}
 }
 
@@ -67,8 +70,10 @@ void draw_page_main(){
 	}
 }
 
+
+
 void draw_page_credits(){
-	for (int i = 7; i >= 0; i--){
+	/*for (int i = 7; i >= 0; i--){
 		for (int j = 0; j < 8 - i; j++){
 			oled_goto_line(i + j);
 			oled_sram_print(page_credits[j]);
@@ -86,7 +91,7 @@ void draw_page_credits(){
 		}
 		oled_sram_update();
 		_delay_ms(500);
-	}
+	}*/
 
 }/* To make it more starwars look-a-like we can have one line between the strings. And print the same
  * string row twice, but left and right shit to get the ends meeting.
