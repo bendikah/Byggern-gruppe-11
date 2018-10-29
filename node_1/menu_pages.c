@@ -1,25 +1,40 @@
 #include "menu_pages.h"
 
 
-extern struct menu_page page_main = {
-        .index = MAIN,
-        .label = "Main menu",
-        .parent = NULL, //root oage
-        .children[] = {&page_play, &page_high_score, &page_settings &page_credits},
-        .num_of_strings = 4,
-        .strings[] =  {"Play", "High score", "Settings", "Credits"}
+extern struct menu_page page_start;
 
+struct menu_page page_main = {
+        .index = MAIN,
+        .label[0] = "Main menu",
+        .parent = NULL, //root oage
+        .children[0] = &page_play,
+        .children[1] = &page_high_score,
+        .children[2] = &page_settings,
+        .children[3] = &page_credits,
+        .num_of_strings = 4,
+        .strings[0] = "Play",
+        .strings[1] = "High score",
+        .strings[2] = "Settings",
+        .strings[3] = "Credits"
 };
 
-extern struct menu_page page_play;
-extern struct menu_page page_high_score;
-extern struct menu_page page_settings;
+struct menu_page page_play;
+struct menu_page page_high_score;
+struct menu_page page_settings;
 
-extern struct menu_page page_credits = {
+
+struct menu_page page_credits = {
         .index = CREDITS,
-        .label = "Credits",
+        .label[0] = "Credits",
         .parent = &page_main,
-        .children = NULL,
+        .children[0] = NULL,
         .num_of_strings = 8,
-        .strings[] = {"Bernt Johan", "Vegard", "Kolbjørn", "Waseem", "Jo Arve", "Bendik", "Eivind", "Robert"}
+        .strings[0] = "Bernt Johan",
+        .strings[1] = "Vegard",
+        .strings[2] = "Kolbjørn",
+        .strings[3] = "Waseem",
+        .strings[4] = "Jo Arve",
+        .strings[5] = "Bendik",
+        .strings[6] = "Eivind",
+        .strings[7] = "Robert"
 };
