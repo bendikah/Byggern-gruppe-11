@@ -8,13 +8,15 @@
     and the fourth is how many times they have played.
     From 40 there is 5*3 bytes which contains the 5 players with highest score.
 */
-#define USER(n) 4*n
-#define USER_STAT(n) 4*n+3
-#define HIGH_SCORE(n) 4*(10+n)
+#define ADDR_USER(n) 4*n
+#define ADDR_USER_STAT(n) 4*n+3
+#define ADDR_HIGH_SCORE(n) 40+3*n
 
 void EEPROM_write(unsigned int uiAddress, unsigned char ucData);
 
 unsigned char EEPROM_read(unsigned int uiAddress);
+
+char* EEPROM_read_three(unsigned int uiAddress);
 
 
 

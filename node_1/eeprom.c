@@ -29,3 +29,8 @@ Start eeprom read by writing EERE */
 /* Return data from data register */
     return EEDR;
 }
+
+
+char* EEPROM_read_three(unsigned int uiAddress){ 
+    return [EEPROM_read(uiAddress), EEPROM_read(uiAddress+1), EEPROM_read(uiAddress+2),'\0'];
+}
