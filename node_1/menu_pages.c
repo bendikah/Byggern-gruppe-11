@@ -1,4 +1,5 @@
 #include "menu_pages.h"
+#include "eeprom.h"
 
 
 extern struct menu_page page_start;
@@ -18,8 +19,17 @@ struct menu_page page_main = {
         .strings[3] = "Credits"
 };
 
+
 struct menu_page page_play;
-struct menu_page page_high_score;
+struct menu_page page_high_score = {
+    .index = HIGH_SCORE,
+    .label[0] = "High score",
+    .parent = &page_main,
+    .children[0] = NULL,
+    .num_of_strings = 5
+    //Does one have to read the highscoores in a init function?
+};
+
 struct menu_page page_settings;
 
 
