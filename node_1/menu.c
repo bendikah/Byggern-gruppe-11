@@ -70,6 +70,12 @@ void draw_page_main(){
 	}
 }
 
+void draw_page_high_score(){
+	for (int i = 0; i < page_high_score.num_of_strings; i++){
+		oled_printf("%i. %s\n", i, page_high_score.strings[i]);
+	}
+}
+
 
 
 void draw_page_credits(){
