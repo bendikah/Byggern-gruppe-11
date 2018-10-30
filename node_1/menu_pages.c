@@ -7,7 +7,7 @@ struct menu_page page_start = {
         .index = START,
         .parent = NULL,
         .children[0] = &page_main,
-        .num_of_strings = 10
+        .num_of_strings = 8
         //must initialize the strings in a init function
 };
 
