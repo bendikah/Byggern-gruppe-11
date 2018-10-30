@@ -1,5 +1,6 @@
 #include "menu_pages.h"
 #include "eeprom.h"
+#include "load_and_save.h"
 
 
 struct menu_page page_start = {
@@ -54,3 +55,18 @@ struct menu_page page_credits = {
         .strings[6] = "Eivind",
         .strings[7] = "Robert"
 };
+
+void menu_page_init(){
+    // Load users
+    for (int i = 0; i < page_start.num_of_strings - 2; i++){
+        page_start.strings[i] = load_user(unsigned int i);
+    }
+    page_start.strings[page_start.num_of_strings-2] = "GST";
+    page_start.strings[page_start.num_of_strings-1] = "Add user"
+
+    // Load high scores
+    for (int i = 0; i < page_high_score.num_of_strings; i++){
+        page_high_score.strings[i] = load_high_score_name(i);
+#warning also load score. How to do score into a string?
+    }
+}

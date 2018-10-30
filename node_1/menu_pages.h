@@ -25,6 +25,8 @@ struct menu_page {
 
 };
 
+void menu_page_init();
+
 extern struct menu_page page_start;
 extern struct menu_page page_main;
 extern struct menu_page page_play;
