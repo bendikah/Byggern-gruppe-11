@@ -2,12 +2,18 @@
 #include "eeprom.h"
 
 
-extern struct menu_page page_start;
+struct menu_page page_start = {
+        .index = START,
+        .parent = NULL,
+        .children[0] = &page_main,
+        .num_of_strings = 10
+        //must initialize the strings in a init function
+};
 
 struct menu_page page_main = {
         .index = MAIN,
         .label[0] = "Main menu",
-        .parent = NULL, //root oage
+        .parent = &page_start, //root oage
         .children[0] = &page_play,
         .children[1] = &page_high_score,
         .children[2] = &page_settings,
