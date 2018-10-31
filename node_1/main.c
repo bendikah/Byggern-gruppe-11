@@ -16,6 +16,8 @@
 #include <avr/interrupt.h>
 #include "oled_sram.h"
 #include "spi.h"
+#include "load_and_save.h"
+#include "eeprom.h"
 
 int main(void){
   //DDRA = 0xFF;
@@ -30,27 +32,16 @@ int main(void){
   //SRAM_test();
   //testThisShit();
   //test_adc();
-//menu_init();
-uint8_t rand = 0;
-for (uint16_t i = 240; i<270; i++){
-  sram_write(i,rand);
-  USART_printf("rand value %i \n",sram_read(i));
-  rand ++;
-}
-uint16_t test = 0;
-sram_write(test,rand);
-USART_printf("rand value %i \n",sram_read(test));
-
-_delay_ms(2000);
-test = 255;
-uint8_t test_2 = 2;
-  sram_write(test,test_2);
-  USART_printf("sram_value: %d\n",sram_read(test));
-  USART_printf("STARTING \n");
   //oled_sram_print("hello world");
-menu_init();
+//menu_init();
+//reboot();
+  USART_printf("STARTING \n");
   //can_init(1);
-*/
+
+  EEPROM_write(10,'t');
+  EEPROM_write(11, 'r');
+  //USART_printf("EEPROM value: %s\n",[EEPROM_read(10),EEPROM_read(11),'\0']);
+  test_menu();
   //github solution mcp
   /*
   while(1){
