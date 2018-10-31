@@ -72,7 +72,12 @@ uint8_t oled_get_char_length(){
 }
 
 void oled_sram_put_char(uint8_t c){
-
+  if (c == '\n'){
+      current_row++;
+      current_row %= NUM_OF_PAGES;
+      current_col = 0;
+      return;
+  }
     c -= 32;
     for (uint8_t i = 0; i < oled_get_char_length(); i++){
         switch (char_size){
@@ -114,6 +119,8 @@ void oled_sram_update(void){
     for (int i = 0; i < 1024; i++){
       *oled_data = sram_read(i);
     }
+    current_row = 0;
+    current_col = 0;
 }
 
 void oled_goto_line(uint8_t line)
