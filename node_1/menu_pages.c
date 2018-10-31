@@ -27,7 +27,10 @@ struct menu_page page_main = {
 };
 
 
-struct menu_page page_play;
+struct menu_page page_play = {
+    .index = PLAY,
+    .label[0] = "Play"
+};
 struct menu_page page_high_score = {
     .index = HIGH_SCORE,
     .label[0] = "High score",
@@ -37,7 +40,9 @@ struct menu_page page_high_score = {
     //Does one have to read the highscoores in a init function?
 };
 
-struct menu_page page_settings;
+struct menu_page page_settings = {
+    .index = SETTINGS
+};
 
 
 struct menu_page page_credits = {
@@ -48,7 +53,7 @@ struct menu_page page_credits = {
         .num_of_strings = 8,
         .strings[0] = "Bernt Johan",
         .strings[1] = "Vegard",
-        .strings[2] = "Kolbjørn",
+        .strings[2] = "Kolbjorn",
         .strings[3] = "Waseem",
         .strings[4] = "Jo Arve",
         .strings[5] = "Bendik",
@@ -59,14 +64,14 @@ struct menu_page page_credits = {
 void menu_page_init(){
     // Load users
     for (int i = 0; i < page_start.num_of_strings - 2; i++){
-        page_start.strings[i] = load_user(unsigned int i);
+        page_start.strings[i] = load_user(i);
     }
     page_start.strings[page_start.num_of_strings-2] = "GST";
-    page_start.strings[page_start.num_of_strings-1] = "Add user"
+    page_start.strings[page_start.num_of_strings-1] = "Add user";
 
     // Load high scores
     for (int i = 0; i < page_high_score.num_of_strings; i++){
         page_high_score.strings[i] = load_high_score_name(i);
 #warning also load score. How to do score into a string?
     }
-}
+};
