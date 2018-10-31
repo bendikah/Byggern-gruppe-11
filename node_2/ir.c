@@ -19,6 +19,7 @@
 void ir_init(){
     //make it an output
     //set_bit(IR_DPORT, IR_PIN);
+
     adc_init();
 }
 
@@ -34,14 +35,22 @@ void ir_stop_emit_light(){
 
 void adc_init(){
     set_bit(ADCSRA,ADEN); //enable adc
-    set_bit(ADMUX,ADLAR); //leftshift to only represent in adch register
-    //set scaling for sampling 128??
+    set_bit(ADMUX,ADLAR); //leftshift to only represent inset_bit(ADCSRA, ADPS0);
+    set_bit(ADCSRA, ADPS1);
+    set_bit(ADCSRA, ADPS2);
+    //set scaling for sampling 128?? This is only if we want to slow down the adc! but without it doesnt work.
     set_bit(ADCSRA, ADPS0);
     set_bit(ADCSRA, ADPS1);
     set_bit(ADCSRA, ADPS2);
-    //set Voltage ref to VCC
-    set_bit(ADMUX, REFS1);
-    clear_bit(ADMUX, REFS0);
+    //set Voltage ref to VCC ?? do we need this ??
+    //set_bit(ADMUX, REFS1);
+    //clear_bit(ADMUX, REFS0);
+
+
+    //test
+    set_bit(ADMUX,REFS1);
+    set_bit(ADMUX,REFS0);
+
     ADMUX &= ~(1 << MUX4) & ~(1 << MUX3) & ~(1 << MUX2) & ~(1 << MUX1) & ~(1 << MUX0);
   }
 
@@ -55,5 +64,7 @@ void adc_stop(){
 }
 
 uint8_t adc_get_value(){
+  set_bit(ADCSRA,ADSC);
+  while(test_bit(ADCSRA,ADSC)){}
   return ADCH;
 }
