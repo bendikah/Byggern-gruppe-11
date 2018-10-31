@@ -12,7 +12,7 @@ void interrupt_init(void){
   cli();
   // Interrupt on falling edge PE0 we want for now only interrupt 0 which is set in MCUCR
   //EMCUCR &= ~(1<<ISC2);
-  // Enable interrupt on INT4
+  // Enable interrupt on INT4  ?? INT2 som er koblet?
   EIMSK |= (1<<INT2);
   // interrupt on falling edge (i dont know what EMCUCR thing does.. now i know :) )
   EICRA &= ~(1<<ISC20);
