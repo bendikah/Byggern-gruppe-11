@@ -7,6 +7,7 @@
 #include "uart.h"
 #include "util/delay.h"
 #include "can.h"
+#include "menu.h"
 
 void testThisShit(void){
 	DDRA = 0xFF;
@@ -71,4 +72,25 @@ void test_can(void){
   	}
 		USART_printf("\n");
 }
+}
+
+void test_menu(void){
+	menu_init();
+	joystick_init();
+	struct Joystick_positions joystick_positions;
+
+	while(1){
+		joystick_positions = joystick_read_positions();
+		USART_printf("this is the value y = %02d \n", joystick_positions.y);
+		if (joystick_positions.y >= 40){
+			menu_decrement_branch();
+		}
+		else if (joystick_positions.y <= -40){
+			menu_increment_branch();
+		}
+		if (joystick_read_button()){
+			menu_next_page();
+		}
+		_delay_ms(1000);
+	}
 }
