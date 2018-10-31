@@ -82,22 +82,26 @@ void draw_page_credits(){
 	/*for (int i = 7; i >= 0; i--){
 		for (int j = 0; j < 8 - i; j++){
 			oled_goto_line(i + j);
-			oled_sram_print(page_credits[j]);
+			oled_goto_column(0);
+			oled_printf(page_credits[j]);
 		}
-		oled_sram_update();
+		//oled_sram_update();
 		_delay_ms(500);
+		oled_clear_screen();
 	}
 	for (int i = 1; i < NUM_OF_CREDIT_STRINGS; i++){
 		for (int j = 0; j < 8 ; j++){
 			oled_goto_line(j);
+			oled_goto_column(0);
 			if (i + j >= NUM_OF_CREDIT_STRINGS){
 				break;
 			}
-			oled_sram_print(page_credits[i + j]);
+			oled_printf(page_credits[i + j]);
 		}
-		oled_sram_update();
+		//oled_sram_update();
 		_delay_ms(500);
-	}*/
+		oled_clear_screen();
+	}
 
 }/* To make it more starwars look-a-like we can have one line between the strings. And print the same
  * string row twice, but left and right shit to get the ends meeting.
