@@ -146,10 +146,7 @@ void oled_put_c(uint8_t c){
         oled_goto_line(current_row);
         oled_goto_column(0);
         return;
-    }
-    if (c == 'h'){
-      USART_printf("current row: %i\n", current_row);
-    }
+    };
     c -= 32;
     for (uint8_t i = 0; i < oled_get_char_length(); i++){
         switch (char_size){
@@ -172,6 +169,66 @@ void oled_printf(const char* fmt, ...){
   va_start(args, fmt);
   vfprintf(&oled_io, fmt, args);
   va_end(args);
+}
+
+void oled_put_char_up_shifted(uint8_t c, int shift_bits){
+  if (c == '\n'){
+      current_row++;
+      current_row %= NUM_OF_PAGES;
+      oled_goto_line(current_row);
+      oled_goto_column(0);
+      return;
+  };
+  c -= 32;
+  for (uint8_t i = 0; i < oled_get_char_length(); i++){
+      switch (char_size){
+          case ('L'):
+              oled_write_d((pgm_read_byte(&(font8[c][i]))) >> shift_bits);
+              break;
+          case ('M'):
+              oled_write_d((pgm_read_byte(&(font5[c][i]))) >> shift_bits);
+              break;
+          case ('S'):
+              oled_write_d((pgm_read_byte(&(font4[c][i]))) >> shift_bits);
+              break;
+      }
+  }
+}
+void oled_put_char_down_shifted(uint8_t c, int shift_bits){
+  if (c == '\n'){
+      current_row++;
+      current_row %= NUM_OF_PAGES;
+      oled_goto_line(current_row);
+      oled_goto_column(0);
+      return;
+  };
+  c -= 32;
+  for (uint8_t i = 0; i < oled_get_char_length(); i++){
+      switch (char_size){
+          case ('L'):
+              oled_write_d((pgm_read_byte(&(font8[c][i]))) << shift_bits);
+              break;
+          case ('M'):
+              oled_write_d((pgm_read_byte(&(font5[c][i]))) << shift_bits);
+              break;
+          case ('S'):
+              oled_write_d((pgm_read_byte(&(font4[c][i]))) << shift_bits);
+              break;
+      }
+  }
+}
+
+void oled_print_up_shifted(uint8_t* string, int shift_bits){
+  for (uint8_t i = 0; i < strlen(string); i++){
+      oled_put_char_up_shifted(string[i], shift_bits);
+      //oled_goto_column(current_col+oled_get_char_length());
+  }
+}
+void oled_print_down_shifted(uint8_t* string, int shift_bits){
+  for (uint8_t i = 0; i < strlen(string); i++){
+      oled_put_char_up_shifted(string[i], shift_bits);
+      //oled_goto_column(current_col+oled_get_char_length());
+  }
 }
 
 /*

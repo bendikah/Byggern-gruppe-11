@@ -16,6 +16,7 @@
 #include <avr/interrupt.h>
 #include "oled_sram.h"
 #include "spi.h"
+#include "oled.h"
 
 int main(void){
   //DDRA = 0xFF;
@@ -25,32 +26,27 @@ int main(void){
   //fdevopen(USART_Transmit, USART_Receive);
   //joystick_init();
   SRAM_test();
-	oled_sram_initialize();
+	//oled_sram_initialize();
+  oled_initialize();
 //_delay_ms(5000);
   //SRAM_test();
   //testThisShit();
   //test_adc();
-//menu_init();
-uint8_t rand = 0;
-for (uint16_t i = 240; i<270; i++){
-  sram_write(i,rand);
-  USART_printf("rand value %i \n",sram_read(i));
-  rand ++;
-}
-uint16_t test = 0;
-sram_write(test,rand);
-USART_printf("rand value %i \n",sram_read(test));
-
-_delay_ms(2000);
-test = 255;
-uint8_t test_2 = 2;
-  sram_write(test,test_2);
-  USART_printf("sram_value: %d\n",sram_read(test));
   USART_printf("STARTING \n");
   //oled_sram_print("hello world");
-menu_init();
+  menu_init();
   //can_init(1);
-*/
+  /*oled_goto_line(0);
+  for (int i = 0; i < 8; i++){
+    oled_clear_screen();
+    oled_goto_line(0);
+    oled_goto_column(0);
+    oled_print_up_shifted("Hallo", i);
+    _delay_ms(400);
+  }*/
+
+  //oled_printf("hallo");
+
   //github solution mcp
   /*
   while(1){
