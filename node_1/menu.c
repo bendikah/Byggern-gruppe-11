@@ -15,6 +15,7 @@
 
 static int menu_branch;
 static struct menu_page* current_page;
+static char current_user[3];
 
 
 
@@ -26,7 +27,7 @@ static void draw_page_credits();
 void menu_init(){
 	menu_page_init();
 	menu_branch = 0;
-	current_page = &page_main;
+	current_page = &page_start;
 	menu_draw();
 }
 
@@ -145,18 +146,43 @@ void draw_page_credits(){
 
 
 void menu_next_page(){
-    if (current_page->children != NULL){
-        current_page = current_page->children[menu_branch];
-        menu_branch = 0;
-    }
+    if (current_page->children == NULL){
+				return;
+		}
+		switch (current_page->index){
+			case (START):
+				oled_sram_clear_screen();
+					*current_user = page_start.strings[menu_branch];
+					menu_branch = 0;
+					menu_print_welcome(current_user);
+					_delay_ms(1500);
+					break;
+			case (MAIN):
+					break;
+		}
+		current_page = current_page->children[menu_branch];
+		menu_branch = 0;
 		menu_draw();
-    return;
 }
 void menu_previous_page(){
-    if (current_page->parent != NULL) {
-        current_page = current_page->parent;
-        menu_branch = 0;
-    }
-		menu_draw();
-    return;
+    if (current_page->parent == NULL) {
+			return;
+		}
+    current_page = current_page->parent;
+    menu_branch = 0;
+    menu_draw();
+}
+
+void menu_print_welcome(char* user){
+	oled_goto_line(3);
+	oled_goto_column(10);
+	oled_sram_print("Welcome ");
+	#warning user is not a string
+	oled_sram_print(*user);
+	oled_sram_update();
+	_delay_ms(1000);
+	oled_goto_line(4);
+	oled_goto_column(10);
+	oled_sram_print("FUN TIME!");
+	oled_sram_update();
 }
