@@ -1,7 +1,8 @@
 
 
-#ifndef load_and_save_H
-#define load_and_save_H
+#ifndef LOAD_AND_SAVE_H
+#define LOAD_AND_SAVE_H
+#include <stdio.h>
 
 /*
  * A user consists of three letters. They are saved in eeprom consentent(?) (etter hverandre).
@@ -10,15 +11,16 @@
  * Each highscore consists of three letters, representing the user, and a score.
  */
 
+void reboot();
 
 char* load_user(unsigned int number);
 
 char* load_high_score_name(unsigned int number);
 uint8_t load_high_score_score(unsigned int number);
 
-char* save_user(unsigned int number, char* user_name);
+void save_user(unsigned int number, char* user_name);
 
-char* save_high_score(unsigned int number, char* user_name, uint8_t score);
+void save_high_score(unsigned int number, char* user_name, uint8_t score);
 
 
 
