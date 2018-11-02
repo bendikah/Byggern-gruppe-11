@@ -37,28 +37,6 @@ int main(void){
 
   //can_init(1);
 
-  //github solution mcp
-  /*
-  while(1){
-    _delay_ms(2000);
-  mcp2515_init();
-  }
-  */
-  // our mcp_driver
-
-  //mcp_write(MCP_TXB0CTRL,0xFF);
-  /*spi_initialize();
-  mcp_reset();
-  while(1){
-    _delay_ms(2000);
-    mcp_write(0x03, 0x7D);
-    uint8_t ret = mcp_read(0x03);
-    USART_printf("%x",ret);
-  }
-  uint8_t readval = mcp_status();
-  USART_printf("this is the shit from mcp %x",readval);
-
-  */
 
 
   //testing interrupt
@@ -67,12 +45,12 @@ int main(void){
   //testing can
   //test_can();
 
-  USART_printf("test Servo\n");
+  USART_printf("test Motor\n");
   can_init(1);
   joystick_init();
   //Servo test
   while(1){
-  _delay_ms(1000);
+  _delay_ms(100);
   joy_send_pos();
   }
 

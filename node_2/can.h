@@ -1,6 +1,9 @@
 #ifndef CAN_H_
 #define CAN_H_
 
+#include <stdint.h>
+
+
 union Can_data_t {
   uint8_t   u8[8];
   int8_t    i8[8];

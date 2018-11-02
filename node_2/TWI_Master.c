@@ -82,7 +82,7 @@ void TWI_Start_Transceiver_With_Data( unsigned char *msg, unsigned char msgSize 
   unsigned char temp;
 
   while ( TWI_Transceiver_Busy() );             // Wait until TWI is ready for next transmission.
-  USART_printf("im in transmit \n");
+  //USART_printf("im in transmit \n");
   TWI_msgSize = msgSize;                        // Number of data to transmit.
   TWI_buf[0]  = msg[0];                         // Store slave address with R/W setting.
   if (!( msg[0] & (TRUE<<TWI_READ_BIT) ))       // If it is a write operation, then also copy data.
@@ -147,7 +147,7 @@ application.
 ISR(TWI_vect)
 {
   static unsigned char TWI_bufPtr;
-  USART_printf("TWSR %x \n",TWSR);
+  //USART_printf("TWSR %x \n",TWSR);
   switch (TWSR)
   {
     case TWI_START:             // START has been transmitted

@@ -14,20 +14,27 @@
 #include "ir.h"
 
 #include "motor_driver.h"
+#include "encoder.h"
+#include "PID.h"
 
 int main(void){
     USART_Init ( MYUBRR );
     set_bit(MCUCR,SRE);
     interrupt_init();
-
+/*
     motor_init();
     int i = 0;
     while (1) {
       i++;
       _delay_ms(2000);
       motor_set_direction(i%2);
-      motor_set_speed(60);
-    }
+      motor_set_speed(70);
+    }*/
+    //test_motor_by_joystick();
+    //test_encoder();
+    PID_timer_init();
+    while(1){}
+
     /*
     ir_init();
     int i = 0;

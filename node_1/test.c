@@ -72,3 +72,17 @@ void test_can(void){
 		USART_printf("\n");
 }
 }
+
+void test_mcp(){
+	//mcp_write(MCP_TXB0CTRL,0xFF); ??
+	spi_initialize();
+	mcp_reset();
+	while(1){
+		_delay_ms(2000);
+		mcp_write(0x03, 0x7D);
+		uint8_t ret = mcp_read(0x03);
+		USART_printf("%x",ret);
+	}
+	uint8_t readval = mcp_status();
+	USART_printf("this is the shit from mcp %x",readval);
+}
