@@ -13,5 +13,7 @@ void joy_send_pos(void){
     msg_joy_positions.data[0] = joy_pos.x;
     msg_joy_positions.data[1] = joy_pos.y;
     msg_joy_positions.data[2] = joystick_read_button();
+    msg_joy_positions.data[3] = slider_read_left();
+    msg_joy_positions.data[4] = slider_read_right();
     can_transmit(&msg_joy_positions);
 }
