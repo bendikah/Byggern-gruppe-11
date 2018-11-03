@@ -6,38 +6,59 @@
 #include "global_defines.h"
 #include "uart.h"
 #include <avr/interrupt.h>
+#include "interrupt.h"
+#include <stdlib.h>
 
-uint16_t error;
-int8_t integral;
-int8_t derivative;
-int8_t prevError;
+int16_t error;
+int16_t integral;
+int16_t derivative;
+int16_t prevError;
 
-uint16_t reference;
-int8_t kp;
-int8_t ki;
-int8_t kd;
-int8_t dt;
+int16_t reference;
+int16_t kp;
+int16_t ki;
+int16_t kd;
+int16_t dt;
+int16_t control_input;
 
 void PID_init(){
 	reference = 0;
-	kp = 10;
+	kp = 2;
 	ki = 0;
 	kd = 0;
 	dt = 0;
 	prevError = 0;
 	integral = 0;
+	control_input = 0;
 }
 
 void PID_update(){
+	PID_can_handler();
 	error = reference - encoder_read(); //get that encoder val;
 	integral += error * dt;
 	derivative = (error - prevError) / dt;
 	prevError = error;
+
+	USART_printf("error = %d \n",error);
+
+	control_input = kp*error;// + ki*integral + kd*derivative;
+	USART_printf("control_input = %d \n", control_input);
+	//PID_update_system();
 }
 
-void update_system(){
-	return;
-	//com_set_u(kp*error + ki*integral + kd*derivative); SET MOTOR direction
+void PID_update_system(){
+	if(control_input > 0){
+		motor_set_direction(0);
+	}
+	else if(control_input < 0){
+		motor_set_direction(1);
+	}
+	if(abs(control_input) > 60){
+		motor_set_speed(60);
+		return;
+	}
+
+	motor_set_speed(abs(control_input));
 }
 
 void PID_timer_init(){
@@ -60,14 +81,14 @@ void PID_timer_init(){
 
 
   //enable interrupt on overflow counter 3
-  set_bit(TIMSK3,TOIE3);
+  	//set_bit(TIMSK3,TOIE3);
 	set_bit(TIMSK3,OCIE3A);
 	sei();
   //enable interrupt on comparing counter 3 compare B
   //set_bit(TIMSK3,OCIE3B);
   //set top mode
-  ICR3 = 5000;
-	OCR3A =5000;
+  ICR3 = 65000;
+	//OCR3A =30000;
 
 	/*
 	// Disable global interrupts
@@ -92,7 +113,23 @@ USART_printf("Interrupt virker \n");
 }
 
 */
-ISR(TIMER3_OVF_vect){
-USART_printf("Interrupt virker \n");
-// Wake up the CPU!
+
+
+
+
+ISR(TIMER3_COMPA_vect){
+	//USART_printf("Interrupt virker \n");
+	// Wake up the CPU!
+	//PID_update();
+	//PID_update_system();
+
+}
+
+
+void PID_can_handler(){
+	reference = right_slider*4*9-360;
+	USART_printf("reference = %d \n",reference);
+	USART_printf("encoder = %d \n",encoder_read());
+
+
 }

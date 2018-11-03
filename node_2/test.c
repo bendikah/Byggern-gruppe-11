@@ -10,6 +10,7 @@
 #include "util/delay.h"
 #include <stdlib.h>
 #include "encoder.h"
+#include "interrupt.h"
 
 #warning should probably be put somewhere else??
 #define JOY_THRESHOLD   30

@@ -4,7 +4,7 @@
 #include <avr/io.h>
 
 #include "global_defines.h"
-
+#include "uart.h"
 
 //should have init for all
 
@@ -21,10 +21,13 @@ void motor_init(void){
 
     TWI_Master_Initialise();
     //set motor speed 0
+
+
     motor_set_speed(0);
 }
 
 void motor_set_speed(uint8_t speed){
+    USART_printf("set speed = %d \n",speed);
     messageBuf[0] = (TWI_targetSlaveAddress<<TWI_ADR_BITS) | (FALSE<<TWI_READ_BIT); // The first byte must always consit of General Call code or the TWI slave address.
     messageBuf[1] = TWI_CMD_MASTER_WRITE;             // The first byte is used for commands.
     messageBuf[2] = speed;                        // The second byte is used for the data.

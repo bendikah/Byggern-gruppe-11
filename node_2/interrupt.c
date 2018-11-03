@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include "uart.h"
 #include "interrupt.h"
+#include "PID.h"
+#include "can.h"
+#include "can_definitions.h"
 
 void interrupt_init(void){
 
@@ -22,7 +25,19 @@ void interrupt_init(void){
   sei();
 }
 
+can_message recieved_msg;
 ISR(INT2_vect){
-USART_printf("Interrupt virker \n");
-// Wake up the CPU!
+    can_recieve(&recieved_msg);
+
+    switch (recieved_msg.id) {
+        case BREADBOARD_OUTPUT_ID:
+            //USART_printf("recieved msg breadboard");
+            joy_pos_x = recieved_msg.data[0];
+            joy_pos_y = recieved_msg.data[1];
+            joy_button = recieved_msg.data[2];
+            left_slider = recieved_msg.data[3];
+            right_slider = recieved_msg.data[4];
+            //solenoid_can_handler(&recieved_msg);
+
+    }
 }

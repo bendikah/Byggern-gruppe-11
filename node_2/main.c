@@ -16,24 +16,38 @@
 #include "motor_driver.h"
 #include "encoder.h"
 #include "PID.h"
+#include "can_definitions.h"
+#include "solenoid.h"
 
 int main(void){
     USART_Init ( MYUBRR );
     set_bit(MCUCR,SRE);
+    /*interrupt_init();
+    USART_printf("Starting \n");
     interrupt_init();
-/*
+    can_init(1);
     motor_init();
-    int i = 0;
-    while (1) {
-      i++;
-      _delay_ms(2000);
-      motor_set_direction(i%2);
-      motor_set_speed(70);
-    }*/
-    //test_motor_by_joystick();
-    //test_encoder();
+    encoder_init();
     PID_timer_init();
-    while(1){}
+    PID_init();*/
+    solenoid_init();
+    while(1){
+        solenoid_shoot();
+        USART_printf("Tings kjer!!\n");
+        _delay_ms(5000);
+    };
+
+
+
+
+    /*can_message recieved_msg;
+    while(1){
+        PID_update();
+    	PID_update_system();
+
+        //USART_printf("Ting skjyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyer\n");
+        _delay_ms(5000);
+    }*/
 
     /*
     ir_init();
@@ -50,7 +64,7 @@ int main(void){
 
     //mcp_reset();
     /*while(1){
-        /*set_bit(PORTB,SS);
+        set_bit(PORTB,SS);
         _delay_ms(1000);
         clear_bit(PORTB,SS);
         _delay_ms(1000);
@@ -70,7 +84,7 @@ int main(void){
   can_init(1);
   pwm_init();
 
-  /*can_message msg;
+  can_message msg;
   msg.id = 1;
   msg.length = 3;
   msg.data[0] = 7;

@@ -5,7 +5,8 @@
 
 void PID_init();
 void PID_update();
-void update_system();
+void PID_update_system();
 void PID_timer_init();
+void PID_can_handler(void);
 
 #endif
