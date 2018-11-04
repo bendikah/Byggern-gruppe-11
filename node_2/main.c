@@ -19,6 +19,10 @@
 #include "can_definitions.h"
 #include "solenoid.h"
 
+/*
+ * Main should listen to message from node 1 if it is gonna start the game or not.
+ */
+
 int main(void){
     USART_Init ( MYUBRR );
     set_bit(MCUCR,SRE);
