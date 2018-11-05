@@ -114,7 +114,10 @@ USART_printf("Interrupt virker \n");
 
 */
 
-
+void PID_set_ref(uint8_t ref){
+	reference = ref*4*9-360;
+#warning thiss is just some simple scaling. Should be better
+}
 
 
 ISR(TIMER3_COMPA_vect){
