@@ -21,10 +21,20 @@ __attribute__((format(printf,1,2))) void oled_printf(const char* fmt, ...);
 
 
 void oled_sram_put_char(uint8_t c);
-void oled_sram_print(uint8_t *data);
+void oled_sram_print(char* string);
 void oled_sram_put_noise(void);
+void oled_sram_clear_screen(void);
 
 void oled_sram_update(void);
+void oled_fill_screen_horizontal();
 
+/*
+ * Put_char functions below should be static in the c-file
+ */
+void oled_sram_put_char_up_shifted(uint8_t c, int shift_bits);
+void oled_sram_put_char_down_shifted(uint8_t c, int shift_bits);
+
+void oled_sram_print_up_shifted(uint8_t* data, int shift_bits);
+void oled_sram_print_down_shifted(uint8_t* data, int shift_bits);
 
 #endif

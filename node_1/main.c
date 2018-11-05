@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include "uart.h"
 #include "test_sram.h"
-#include "oled.h"
 #include "menu.h"
 #include "global_defines.h"
 #include "util/delay.h"
@@ -15,8 +14,10 @@
 #include "interrupt.h"
 #include "joy_can.h"
 #include <avr/interrupt.h>
-
+#include "oled_sram.h"
 #include "spi.h"
+#include "load_and_save.h"
+#include "eeprom.h"
 
 int main(void){
   //DDRA = 0xFF;
@@ -25,22 +26,22 @@ int main(void){
   //set_bit(MCUCR, ISC01);
   //fdevopen(USART_Transmit, USART_Receive);
   //joystick_init();
-
-	oled_initialize();
-//_delay_ms(5000);
   SRAM_test();
+	oled_sram_initialize();
+//_delay_ms(5000);
+  //SRAM_test();
   //testThisShit();
   //test_adc();
+  //oled_sram_print("hello world");
 //menu_init();
+//reboot();
   USART_printf("STARTING \n");
-  oled_sram_print("hello world");
-
   //can_init(1);
 
 
 
   //testing interrupt
-  interrupt_init();
+  //interrupt_init();
 
   //testing can
   //test_can();
