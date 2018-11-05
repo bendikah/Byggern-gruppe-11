@@ -7,7 +7,7 @@
 #define NODE2   0x30
 
 #define BREADBOARD_OUTPUT_ID NODE1 | 0x00
-//bytes are ordered like 0: joy.x, 1: joy.y, 2: sliders.left, 3:sliders.right
+//bytes are ordered like 0: joy.x, 1: joy.y, 2: joy_button, 3: sliders.left, 4:sliders.right
 
 
 #endif
