@@ -2,13 +2,13 @@
 #include <avr/io.h>
 #include <stdio.h>
 #include "uart.h"
-#include "interrupt.h"
+#include "can_handler.h"
 #include "PID.h"
 #include "can.h"
 #include "can_definitions.h"
 
-void interrupt_init(void){
-
+void can_handler_init(void){
+  game_start = 0;
   //set global interrupts
   SREG |= (1<<7);
   // Disable global interrupts
@@ -25,10 +25,11 @@ void interrupt_init(void){
   sei();
 }
 
-can_message recieved_msg;
-ISR(INT2_vect){
-    can_recieve(&recieved_msg);
 
+ISR(INT2_vect){
+  can_message recieved_msg;
+    can_recieve(&recieved_msg);
+    //USART_printf("Recieved something? \n");
     switch (recieved_msg.id) {
         case BREADBOARD_OUTPUT_ID:
             //USART_printf("recieved msg breadboard");
@@ -38,6 +39,10 @@ ISR(INT2_vect){
             left_slider = recieved_msg.data[3];
             right_slider = recieved_msg.data[4];
             //solenoid_can_handler(&recieved_msg);
+        case PINGPONG_GAME_START_ID:
+            game_start = 1;
+            difficulty = recieved_msg.data[0];
+
 
     }
 }

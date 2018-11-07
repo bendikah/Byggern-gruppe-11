@@ -11,9 +11,11 @@
 #include "sram.h"
 #include "mcp_driver.h"
 
-#include "interrupt.h"
+#include "can_handler.h"
 #include "joy_can.h"
 #include <avr/interrupt.h>
+#include "can_messages.h"
+
 #include "oled_sram.h"
 #include "spi.h"
 #include "load_and_save.h"

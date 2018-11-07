@@ -6,7 +6,7 @@
 #include "global_defines.h"
 #include "uart.h"
 #include <avr/interrupt.h>
-#include "interrupt.h"
+#include "can_handler.h"
 #include <stdlib.h>
 
 int16_t error;
@@ -21,6 +21,8 @@ int16_t kd;
 int16_t dt;
 int16_t control_input;
 
+int16_t position = 0;
+
 void PID_init(){
 	reference = 0;
 	kp = 2;
@@ -34,7 +36,7 @@ void PID_init(){
 
 void PID_update(){
 	PID_can_handler();
-	error = reference - encoder_read(); //get that encoder val;
+	error = reference - position;
 	integral += error * dt;
 	derivative = (error - prevError) / dt;
 	prevError = error;
@@ -132,7 +134,7 @@ ISR(TIMER3_COMPA_vect){
 void PID_can_handler(){
 	reference = right_slider*4*9-360;
 	USART_printf("reference = %d \n",reference);
-	USART_printf("encoder = %d \n",encoder_read());
-
+	position += encoder_read();
+	USART_printf("encoder = %d \n",position);
 
 }

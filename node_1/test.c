@@ -8,6 +8,8 @@
 #include "util/delay.h"
 #include "can.h"
 #include "menu.h"
+#include "spi.h"
+#include "mcp_driver.h"
 
 void testThisShit(void){
 	DDRA = 0xFF;

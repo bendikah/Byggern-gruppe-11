@@ -30,7 +30,7 @@ void encoder_init(){
       //set RST
       set_bit(PORTH,NOT_RST);
 }
-
+//val += encoder_read()
 int16_t encoder_read(){
     int16_t encoder_val;
 
@@ -46,6 +46,7 @@ int16_t encoder_read(){
 
     //toggle RST
     clear_bit(PORTH,NOT_RST);
+    _delay_us(20);
     set_bit(PORTH,NOT_RST);
     set_bit(PORTH,NOT_OE);
 

@@ -3,12 +3,7 @@
 #include "global_defines.h"
 #include <stdint.h>
 #include <avr/io.h>
-
-#warning set a pin_number
-#define IR_PIN
-#define IR_PORT
-#define IR_DPORT //direction port
-
+#include "uart.h"
 
 
 /*
@@ -16,10 +11,10 @@
  * if setting and check. This has to be decided in the init function
  */
 
+
 void ir_init(){
     //make it an output
     //set_bit(IR_DPORT, IR_PIN);
-
     adc_init();
 }
 
@@ -50,7 +45,7 @@ void adc_init(){
     //test
     set_bit(ADMUX,REFS1);
     set_bit(ADMUX,REFS0);
-
+USART_printf("ADC  %d \n",adc_get_value());
     ADMUX &= ~(1 << MUX4) & ~(1 << MUX3) & ~(1 << MUX2) & ~(1 << MUX1) & ~(1 << MUX0);
   }
 
@@ -67,4 +62,17 @@ uint8_t adc_get_value(){
   set_bit(ADCSRA,ADSC);
   while(test_bit(ADCSRA,ADSC)){}
   return ADCH;
+}
+
+int ir_check_signal(){
+    uint8_t val = adc_get_value();
+    #warning Add filter?
+    if (val > 190){
+        return 0;
+    }
+    else if(val < 150){
+      return 1;
+    }
+
+    return -1;
 }
