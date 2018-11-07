@@ -44,7 +44,7 @@ int main(void){
   //interrupt_init();
 
   //testing can
-  //test_can();
+  test_can();
 
   USART_printf("test Motor\n");
   can_init(1);

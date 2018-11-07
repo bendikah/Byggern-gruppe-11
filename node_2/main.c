@@ -26,6 +26,13 @@
 int main(void){
     USART_Init ( MYUBRR );
     set_bit(MCUCR,SRE);
+
+
+    test_can();
+
+
+
+
     /*interrupt_init();
     USART_printf("Starting \n");
     interrupt_init();
@@ -34,13 +41,8 @@ int main(void){
     encoder_init();
     PID_timer_init();
     PID_init();*/
-    solenoid_init();
-    while(1){
-        solenoid_shoot();
-        USART_printf("Tings kjer!!\n");
-        _delay_ms(5000);
-    };
 
+    //test_solenoid();
 
 
 

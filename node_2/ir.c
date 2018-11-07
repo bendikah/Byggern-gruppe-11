@@ -10,7 +10,7 @@
 #define IR_DPORT //direction port
 
 
-
+int ir_flag; //bad name help
 /*
  *How should we check for break in ir-light? Maybe an interupt? Or if we aren't doing anything else we can just have an
  * if setting and check. This has to be decided in the init function
@@ -19,7 +19,7 @@
 void ir_init(){
     //make it an output
     //set_bit(IR_DPORT, IR_PIN);
-
+    ir_flag = 1;
     adc_init();
 }
 
@@ -67,4 +67,16 @@ uint8_t adc_get_value(){
   set_bit(ADCSRA,ADSC);
   while(test_bit(ADCSRA,ADSC)){}
   return ADCH;
+}
+
+uint8_t ir_check_signal(){
+    if (adc_get_value() > 230 && ir_flag == 1){
+        ir_flag = 0;
+        return 0;
+    }
+    else if(adc_get_value() < 220 && ir_flag == 0){
+      ir_flag = 1;
+      return 1;
+    }
+    return -1;
 }

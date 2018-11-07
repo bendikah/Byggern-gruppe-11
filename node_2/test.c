@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include "encoder.h"
 #include "interrupt.h"
+#include "solenoid.h"
+#include "ir.h"
 
 #warning should probably be put somewhere else??
 #define JOY_THRESHOLD   30
@@ -71,5 +73,52 @@ void test_encoder(){
 
     USART_printf("encoder val : %d",encoder_read());
   }
+
+}
+
+void test_solenoid(){
+  solenoid_init();
+  while(1){
+      solenoid_shoot();
+      USART_printf("Tings kjer!!\n");
+      _delay_ms(5000);
+  }
+
+}
+
+void test_ir(){
+  ir_init();
+  int i = 0;
+  while(1){
+    _delay_ms(2000);
+    if(ir_check_signal() == 0){
+        USART_printf("You lost a life \n");
+    }
+    else if(ir_check_signal() == 1){
+      USART_printf("new game starting \n");
+    }
+    USART_printf("counter %d \n",i);
+    i++;
+  }
+
+}
+
+void test_can(){
+  interrupt_init();
+  can_init(1);
+
+  can_message new_msg;
+  can_message msg;
+  int i = 0;
+
+  while(1){
+    i++;
+    can_transmit(&msg);
+    _delay_ms(2000);
+    msg.data[2] = i;
+    can_recieve(&new_msg);
+    USART_printf("(can_msg_t){id:%x, len:%d, data:{ \n",new_msg.id, new_msg.length);
+    USART_printf("ting skjer\n");
+}
 
 }
