@@ -4,6 +4,7 @@
 #include "uart.h"
 #include "can_handler.h"
 #include "can_definitions.h"
+#include "can.h"
 
 void can_handler_init(void){
 
@@ -33,6 +34,4 @@ ISR(INT0_vect){
           break;
 
     }
-}
-
 }

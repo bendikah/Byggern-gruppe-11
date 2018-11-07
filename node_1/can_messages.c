@@ -8,7 +8,7 @@ can_message msg_joy_positions = {
 
 can_message msg_game_start = {
   .id = PINGPONG_GAME_START_ID,
-  .lenght = 1,
+  .length = 1,
   .data[0] = 0
 
 };

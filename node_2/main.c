@@ -30,13 +30,20 @@ int main(void){
 
     //test_can();
     //test_ir();
+    can_init(1);
     ir_init();
     can_handler_init();
+    encoder_init();
     while(1){
-    if(game_start){
-      pingpong_init();
-      pingpong_start();
-    }
+    //if(game_start){
+      //game_start = 0;
+      //pingpong_init();
+      //pingpong_start();
+      PID_update();
+      _delay_ms(2000);
+
+    USART_printf("looping \n");
+    //_delay_ms(2000);*/
   }
 
 

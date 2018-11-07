@@ -15,6 +15,7 @@
 #include "can_handler.h"
 #include "joy_can.h"
 #include <avr/interrupt.h>
+#include "can_messages.h"
 
 #include "spi.h"
 
@@ -32,16 +33,21 @@ int main(void){
   //testThisShit();
   //test_adc();
 //menu_init();
+  can_init(1);
   USART_printf("STARTING \n");
-  oled_sram_print("hello world");
-
+  _delay_ms(5000);
+  can_transmit(&msg_game_start);
+  /*while (1) {
+    USART_printf("kjorer \n");
+    _delay_ms(5000);
+  }*/
   //test_can();
   //can_init(1);
 
 
 
   //testing interrupt
-  can_handler_init();
+  //can_handler_init();
 
   //testing can
   //test_can();
