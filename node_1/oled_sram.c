@@ -51,7 +51,6 @@ void oled_sram_initialize(void){
     *oled_int = 0x00;
     *oled_int = 0x07;
     char_size = 'L';
-    oled_sram_clear_screen();
     current_col = 0;
     current_row = 0;
 }

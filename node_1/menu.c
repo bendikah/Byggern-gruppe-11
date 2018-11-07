@@ -23,6 +23,7 @@ static char current_user[3];
 static void draw_page_start();
 static void draw_page_main();
 static void draw_page_credits();
+static void menu_print_welcome(char* user);
 
 void menu_init(){
 	menu_page_init();
@@ -152,7 +153,7 @@ void menu_next_page(){
 		switch (current_page->index){
 			case (START):
 				oled_sram_clear_screen();
-					*current_user = page_start.strings[menu_branch];
+					current_user = page_start.strings[menu_branch];
 					menu_branch = 0;
 					menu_print_welcome(current_user);
 					_delay_ms(1500);
