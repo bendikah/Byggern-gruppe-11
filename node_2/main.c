@@ -9,7 +9,7 @@
 #include "util/delay.h"
 #include "pwm.h"
 #include "servo_driver.h"
-#include "interrupt.h"
+#include "can_handler.h"
 
 #include "ir.h"
 
@@ -18,6 +18,7 @@
 #include "PID.h"
 #include "can_definitions.h"
 #include "solenoid.h"
+#include "pingpong.h"
 
 /*
  * Main should listen to message from node 1 if it is gonna start the game or not.
@@ -26,6 +27,21 @@
 int main(void){
     USART_Init ( MYUBRR );
     set_bit(MCUCR,SRE);
+
+    //test_can();
+    //test_ir();
+    ir_init();
+    can_handler_init();
+    while(1){
+    if(game_start){
+      pingpong_init();
+      pingpong_start();
+    }
+  }
+
+
+
+
     /*interrupt_init();
     USART_printf("Starting \n");
     interrupt_init();
@@ -34,13 +50,15 @@ int main(void){
     encoder_init();
     PID_timer_init();
     PID_init();*/
+
+    /*
     solenoid_init();
     while(1){
         solenoid_shoot();
         USART_printf("Tings kjer!!\n");
         _delay_ms(5000);
     };
-
+    */
 
 
 

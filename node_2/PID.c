@@ -6,7 +6,7 @@
 #include "global_defines.h"
 #include "uart.h"
 #include <avr/interrupt.h>
-#include "interrupt.h"
+#include "can_handler.h"
 #include <stdlib.h>
 
 int16_t error;

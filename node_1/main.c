@@ -12,7 +12,7 @@
 #include "sram.h"
 #include "mcp_driver.h"
 
-#include "interrupt.h"
+#include "can_handler.h"
 #include "joy_can.h"
 #include <avr/interrupt.h>
 
@@ -35,12 +35,13 @@ int main(void){
   USART_printf("STARTING \n");
   oled_sram_print("hello world");
 
+  //test_can();
   //can_init(1);
 
 
 
   //testing interrupt
-  interrupt_init();
+  can_handler_init();
 
   //testing can
   //test_can();

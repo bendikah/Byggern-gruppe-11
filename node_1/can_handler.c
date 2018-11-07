@@ -2,9 +2,10 @@
 #include <avr/io.h>
 #include <stdio.h>
 #include "uart.h"
-#include "interrupt.h"
+#include "can_handler.h"
+#include "can_definitions.h"
 
-void interrupt_init(void){
+void can_handler_init(void){
 
   //set global interrupts
   SREG |= (1<<7);
@@ -23,6 +24,15 @@ void interrupt_init(void){
 }
 
 ISR(INT0_vect){
-USART_printf("Interrupt virker \n");
-// Wake up the CPU!
+  can_message recieved_msg;
+    can_recieve(&recieved_msg);
+    USART_printf("Recieved something? \n");
+    switch (recieved_msg.id) {
+
+        default:
+          break;
+
+    }
+}
+
 }

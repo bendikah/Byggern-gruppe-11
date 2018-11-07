@@ -7,7 +7,8 @@
 #define NODE2   0x30
 
 #define JOY_POSITION_ID   NODE1 | 0x00
-//bytes are ordered like 0: joy.x, 1: joy.y, 2: sliders.left, 3:sliders.right
+//bytes are ordered like 0: joy.x, 1: joy.y, 2: joy_button, 3: sliders.left, 4:sliders.right
 
+#define PINGPONG_GAME_START_ID NODE1 | 0x01
 
 #endif

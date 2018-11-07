@@ -11,4 +11,5 @@ void adc_init();
 void adc_start();
 void adc_stop();
 uint8_t adc_get_value();
+int ir_check_signal();
 #endif
