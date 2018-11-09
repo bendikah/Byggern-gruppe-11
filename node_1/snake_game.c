@@ -7,7 +7,7 @@
 #include "snake_game.h"
 #include <stdlib.h>
 #include "breadboard_input.h"
-#include "oled.h"
+#include "oled_sram.h"
 
 
 
@@ -231,6 +231,7 @@ void printMap_sram()
              oled_sram_print(getMapValue(map[x + y * mapwidth]));
         }
         // Ends the line for next x value
-        oled_printf("\n");
+        oled_sram_print("\n");
     }
+    oled_sram_update();
 }

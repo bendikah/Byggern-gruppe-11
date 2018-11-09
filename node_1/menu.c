@@ -153,7 +153,7 @@ void menu_next_page(){
 		switch (current_page->index){
 			case (START):
 				oled_sram_clear_screen();
-					current_user = page_start.strings[menu_branch];
+					//current_user = page_start.strings[menu_branch];
 					menu_branch = 0;
 					menu_print_welcome(current_user);
 					_delay_ms(1500);

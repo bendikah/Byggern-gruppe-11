@@ -20,6 +20,8 @@
 #include "spi.h"
 #include "load_and_save.h"
 #include "eeprom.h"
+//#include "snake_game.h"
+//#include "oled.h"
 
 int main(void){
   //DDRA = 0xFF;
@@ -29,7 +31,16 @@ int main(void){
   //fdevopen(USART_Transmit, USART_Receive);
   //joystick_init();
   SRAM_test();
-	oled_sram_initialize();
+	//oled_sram_initialize();
+  /*oled_fill_screen_horizontal();
+  oled_sram_update();
+  _delay_ms(1000);
+  oled_sram_clear_screen();
+  oled_sram_update();*/
+  /*oled_initialize();
+  oled_fill_screen();
+  _delay_ms(1000);
+  oled_clear_screen();*/
 //_delay_ms(5000);
   //SRAM_test();
   //testThisShit();
@@ -37,6 +48,7 @@ int main(void){
   //oled_sram_print("hello world");
 //menu_init();
 //reboot();
+//snake_run();
   USART_printf("STARTING \n");
   //can_init(1);
 
@@ -47,14 +59,15 @@ int main(void){
 
   //testing can
   //test_can();
+  //test_menu();
 
   USART_printf("test Motor\n");
   can_init(1);
-  joystick_init();
+  //joystick_init();
   //Servo test
   while(1){
   _delay_ms(100);
-  joy_send_pos();
+  //joy_send_pos();
   }
 
 }

@@ -43,7 +43,6 @@ void oled_sram_initialize(void){
     *oled_int = 0xa6;        //set  normal  display
     *oled_int = 0xaf;        //  display  on
     //Initialize
-
     // start Addressing Mode
     *oled_int = 0x20;
     *oled_int = 0x00;
@@ -60,7 +59,6 @@ void oled_sram_clear_screen(void){
     sram_write(i,0);
   }
 }
-
 uint8_t oled_get_char_length(){
     switch(char_size){
         case ('L'): return 8;
