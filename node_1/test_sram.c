@@ -13,7 +13,9 @@ void SRAM_test(void){
   uint16_t ext_ram_size= 0x800;
   uint16_t write_errors= 0;
   uint16_t retrieval_errors= 0;
+  #ifdef DEBUG_TEST_SRAM
   USART_printf("Starting SRAM test...\n");
+  #endif
   // rand() stores some internal state, so calling this function in a loop will
   // yield different seeds each time (unless srand() is called before this function)
   uint16_t seed = rand();
@@ -25,7 +27,9 @@ void SRAM_test(void){
     //if (i%100 == 0){USART_printf("går fremover");}
     uint8_t retreived_value = ext_ram[i];
     if (retreived_value != some_value) {
+      #ifdef DEBUG_TEST_SRAM
       USART_printf("Write phase error: ext_ram[%4d] = %02X (should be %02X)\n", i, retreived_value, some_value);
+      #endif
       write_errors++;
     }
     //_delay_ms(3000);
@@ -39,9 +43,13 @@ void SRAM_test(void){
     uint8_t some_value = rand();
     uint8_t retreived_value = ext_ram[i];
     if (retreived_value != some_value) {
+      #ifdef DEBUG_TEST_SRAM
       USART_printf("Retrieval phase error: ext_ram[%4d] = %02X (should be %02X)\n", i, retreived_value, some_value);
+      #endif
       retrieval_errors++;
     }
 }
+  #ifdef DEBUG_TEST_SRAM
   USART_printf("SRAM test completed with \n%4d errors in write phase and \n%4d errors in retrieval phase\n\n", write_errors, retrieval_errors);
+  #endif
 }

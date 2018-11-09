@@ -13,7 +13,7 @@
 
 
 
-static int menu_branch;
+static int8_t menu_branch;
 static struct menu_page* current_page;
 static char current_user[3];
 
@@ -65,7 +65,7 @@ void menu_decrement_branch(){
 	menu_draw();
 }
 
-int get_menu_branch(){
+int8_t get_menu_branch(){
 	return menu_branch;
 }
 
@@ -144,7 +144,7 @@ void draw_page_credits(){
  * string row twice, but left and right shit to get the ends meeting.
  * Robert, your an amazing detective-slash-genius
  */
-
+//char* current_user;
 
 void menu_next_page(){
     if (current_page->children == NULL){
@@ -153,7 +153,7 @@ void menu_next_page(){
 		switch (current_page->index){
 			case (START):
 				oled_sram_clear_screen();
-					current_user = page_start.strings[menu_branch];
+					//current_user = page_start.strings[menu_branch];
 					menu_branch = 0;
 					menu_print_welcome(current_user);
 					_delay_ms(1500);
@@ -179,7 +179,7 @@ void menu_print_welcome(char* user){
 	oled_goto_column(10);
 	oled_sram_print("Welcome ");
 	#warning user is not a string
-	oled_sram_print(*user);
+	oled_sram_print(user);
 	oled_sram_update();
 	_delay_ms(1000);
 	oled_goto_line(4);

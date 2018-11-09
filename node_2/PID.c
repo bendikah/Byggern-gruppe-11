@@ -24,39 +24,49 @@ int16_t control_input;
 int16_t position = 0;
 
 void PID_init(){
+	position = 0;
 	reference = 0;
-	kp = 2;
-	ki = 0;
+	kp = 50;
+	ki = 250;
 	kd = 0;
-	dt = 0;
+	dt = 10;
 	prevError = 0;
 	integral = 0;
 	control_input = 0;
 }
 
+void PID_print(){
+	USART_printf("error = %d \n",error);
+	USART_printf("control_input = %d \n", control_input);
+	USART_printf("reference = %d \n",reference);
+	USART_printf("position = %d \n",position);
+	USART_printf("\n");
+}
+
 void PID_update(){
 	PID_can_handler();
 	error = reference - position;
-	integral += error * dt;
-	derivative = (error - prevError) / dt;
+	integral += error/ dt;
+	derivative = (error - prevError) * dt;
 	prevError = error;
 
-	USART_printf("error = %d \n",error);
+	//USART_printf("error = %d \n",error);
 
-	control_input = kp*error;// + ki*integral + kd*derivative;
-	USART_printf("control_input = %d \n", control_input);
-	//PID_update_system();
+	control_input = error/kp + integral/ki; // + kd*derivative;
+	//USART_printf("control_input = %d \n", control_input);
+	PID_update_system();
 }
 
 void PID_update_system(){
 	if(control_input > 0){
 		motor_set_direction(0);
 	}
-	else if(control_input < 0){
+	else if(control_input <= 0){
 		motor_set_direction(1);
 	}
-	if(abs(control_input) > 60){
-		motor_set_speed(60);
+
+	if(abs(control_input) > 90){
+		motor_set_speed(90);
 		return;
 	}
 
@@ -125,16 +135,14 @@ void PID_set_ref(uint8_t ref){
 ISR(TIMER3_COMPA_vect){
 	//USART_printf("Interrupt virker \n");
 	// Wake up the CPU!
-	//PID_update();
+	PID_update();
 	//PID_update_system();
 
 }
 
 
 void PID_can_handler(){
-	reference = right_slider*4*9-360;
-	USART_printf("reference = %d \n",reference);
+	reference = 9180 - right_slider*4*9;
 	position += encoder_read();
-	USART_printf("encoder = %d \n",position);
 
 }

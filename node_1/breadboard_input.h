@@ -5,7 +5,6 @@
 
 #include <stdint.h>
 
-enum Direction {LEFT, RIGHT, UP, DOWN, NEUTRAL};
 
 struct Joystick_positions {
 	int8_t x;
@@ -25,7 +24,6 @@ void joystick_init();
 void joystick_calibrate();
 
 struct Joystick_positions joystick_read_positions();
-enum Direction joystick_get_direction();
 
 int joystick_read_x(void);
 int joystick_read_y(void);

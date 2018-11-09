@@ -7,29 +7,29 @@
 #include "snake_game.h"
 #include <stdlib.h>
 #include "breadboard_input.h"
-#include "oled.h"
+#include "oled_sram.h"
 
 
 
 // Map dimensions
-const int mapwidth = 10;
-const int mapheight = 10;
+int8_t mapwidth = 8;
+int8_t mapheight = 8;
 
-const int size = 100;
+int8_t size = 100;
 
 // The tile values for the map
-int map[100];
+int8_t map[100];
 
 // Snake head details
-int headxpos;
-int headypos;
-int direction =0;
+int8_t headxpos;
+int8_t headypos;
+int8_t direction =0;
 
 // Amount of food the snake has (How long the body is)
-int food = 3;
+int8_t food = 3;
 
 // Determine if game is running
-int running = 0;
+int8_t running = 0;
 
 
 
@@ -48,7 +48,7 @@ void snake_run(){
         clearScreen();
 
         // Print the map
-        printMap();
+        //printMap();
 
         //print map oled
         printMap_sram();
@@ -228,9 +228,14 @@ void printMap_sram()
     for (int x = 0; x < mapwidth; ++x) {
         for (int y = 0; y < mapheight; ++y) {
             // Prints the value at current x,y location
-             oled_sram_print(getMapValue(map[x + y * mapwidth]));
+             oled_sram_put_char(getMapValue(map[x + y * mapwidth]));
+
+             USART_printf("%c",getMapValue(map[x + y * mapwidth]));
         }
         // Ends the line for next x value
-        oled_printf("\n");
+        oled_sram_print("\n");
+        USART_printf("\n");
+
     }
+    oled_sram_update();
 }

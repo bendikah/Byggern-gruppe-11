@@ -59,14 +59,18 @@ void mcp_bit_modify(uint8_t address, uint8_t mask_byte, uint8_t data){
 }
 
 void mcp_reset(){
-  USART_printf("reset start \n");
+  #ifdef DEBUG_MCP
+    USART_printf("reset start \n");
+  #endif
   clear_bit(PORTSPI,SS);
   spi_transmit(MCP_RESET);
   set_bit(PORTSPI,SS);
   _delay_ms(10);
   uint8_t readval = mcp_read(MCP_CANSTAT);
   if ((readval & MODE_MASK) != MODE_CONFIG) {
+    #ifdef DEBUG_MCP
     USART_printf("MCP NOT in config mode after reset %d \n", readval);
+    #endif
   }
 
 

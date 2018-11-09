@@ -1,4 +1,4 @@
-#include "oled.h"
+
 #define F_CPU 4915200
 
 #include "util/delay.h"
@@ -94,10 +94,9 @@ void oled_sram_put_char(uint8_t c){
     }
 }
 
-void oled_fill_screen_horizontal(){
-  volatile uint8_t *oled_data = (uint8_t *) OLED_DATA;
+void oled_sram_fill_screen(){
   for (int i = 0; i < 1024; i++){
-    *oled_data = 0xff;
+    sram_write(i,0xff);
   }
 }
 
@@ -121,6 +120,8 @@ void oled_sram_update(void){
     current_row = 0;
     current_col = 0;
 }
+
+
 
 void oled_goto_line(uint8_t line)
 {

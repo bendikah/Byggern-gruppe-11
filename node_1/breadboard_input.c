@@ -18,7 +18,6 @@
 
 static struct Joystick_positions joystick_positions;
 static struct Joystick_offsets joystick_offsets;
-static int joy_last_button_value;
 
 void joystick_init()
 {
@@ -32,7 +31,6 @@ void joystick_init()
 
 	clear_bit( DDRB, 1 );
 	set_bit( JOYSTICK_BUTTON_PORT, 1);
-	joy_last_button_value = 0;
 
 	#ifdef JOYSTICK_CALIBRATE
 	joystick_calibrate();
@@ -94,21 +92,6 @@ struct Joystick_positions joystick_read_positions(){
 	return joystick_positions;
 }
 
-enum Direction joystick_get_direction(){
-	if (joystick_positions.x > 0 && joystick_positions.x >= joystick_positions.y){
-		return RIGHT;
-	}
-	if (joystick_positions.x < 0 && joystick_positions.x <= joystick_positions.y){
-		return LEFT;
-	}
-	if (joystick_positions.y > 0 && joystick_positions.y >= joystick_positions.x){
-		return UP;
-	}
-	if (joystick_positions.y < 0 && joystick_positions.y <= joystick_positions.x){
-		return DOWN;
-	}
-	return NEUTRAL;
-}
 
 int joystick_read_x(void){
 	int out = adc_read(X_AXIS);
@@ -139,7 +122,7 @@ uint8_t joystick_read_button(void){
 	return 0;*/
 	uint8_t i = !((PINB & (1 << 1)));
 	//uint8_t i = !! test_bit( JOYSTICK_BUTTON_PORT, JOYSTICK_BUTTON_PIN );
-	
+
 	return i;
 }
 

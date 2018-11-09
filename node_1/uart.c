@@ -57,7 +57,7 @@ unsigned int USART_Receive(void){
   /*
   If error, return -1
   */
-  /*if( status & (1<<FE)|(1<<DOR)|(1<<UPE) )
+  /*if( status & (1<<FE)#ifndef DEBUG_TEST_TEST|(1<<DOR)|(1<<UPE) )
     return -1;*/
   /*
   Filter the 9th bit, then return

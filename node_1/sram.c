@@ -18,7 +18,6 @@ void sram_write(uint16_t adress, uint8_t data){
 uint8_t sram_read(uint16_t adress){
     volatile char *ext_ram = (char *) 0x1800;
     uint8_t ret = ext_ram[adress];
-USART_printf(" "); //Needed this for sram_oled to work. Dont know why
-    //USART_printf("adress, ext_ram[adress] %i %i \n",adress,ret);
+    USART_printf(' '); //Needed this for sram_oled to work. Dont know why
     return ret;
 }

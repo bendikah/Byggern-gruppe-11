@@ -11,6 +11,6 @@ void clearScreen();
 void generateFood();
 
 char getMapValue(int value);
-void printMap_sram();
+//void printMap_sram();
 
 #endif

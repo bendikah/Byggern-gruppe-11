@@ -27,7 +27,8 @@ void can_handler_init(void){
 ISR(INT0_vect){
   can_message recieved_msg;
     can_recieve(&recieved_msg);
-    USART_printf("Recieved something? \n");
+
+    //USART_printf("Recieved something? \n");
     switch (recieved_msg.id) {
 
         default:

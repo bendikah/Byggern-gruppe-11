@@ -19,8 +19,8 @@ char* load_user(unsigned int number){
 }
 
 char* load_high_score_name(unsigned int number){
-    //return [EEPROM_read(HIGH_SCORE(number)),EEPROM_read(HIGH_SCORE(number)+1), EEPROM_read(HIGH_SCORE(number)+2),'\0'];
-    return EEPROM_read(HIGH_SCORE(number));
+    return (char[4]){EEPROM_read(HIGH_SCORE(number)), EEPROM_read(HIGH_SCORE(number)+1), EEPROM_read(HIGH_SCORE(number)+2), '\0'};
+    //return EEPROM_read(HIGH_SCORE(number));
 }
 uint8_t load_high_score_score(unsigned int number){
     return EEPROM_read(HIGH_SCORE(number)+3);

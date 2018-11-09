@@ -21,6 +21,7 @@
 #include "load_and_save.h"
 #include "eeprom.h"
 
+
 int main(void){
   //DDRA = 0xFF;
   USART_Init ( MYUBRR );
@@ -38,16 +39,22 @@ int main(void){
 //menu_init();
 //reboot();
   USART_printf("STARTING \n");
+    joystick_init();
+  snake_run();
   //can_init(1);
 
-
-
+  /*
+  oled_sram_fill_screen();
+  oled_sram_update();
+  _delay_ms(500);
+  oled_sram_clear_screen();
+  oled_sram_update();
   //testing interrupt
   //interrupt_init();
-
+  */
   //testing can
   //test_can();
-
+  /*
   USART_printf("test Motor\n");
   can_init(1);
   joystick_init();
@@ -56,5 +63,7 @@ int main(void){
   _delay_ms(100);
   joy_send_pos();
   }
+  */
+
 
 }
