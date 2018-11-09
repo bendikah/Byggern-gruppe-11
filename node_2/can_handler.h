@@ -8,6 +8,7 @@ uint8_t joy_pos_y;
 uint8_t joy_button;
 uint8_t left_slider;
 uint8_t right_slider;
+uint8_t right_touch_button;
 
 //values from PINGPONG_GAME_START_ID
 uint8_t game_start;

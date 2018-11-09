@@ -39,7 +39,8 @@ int main(void){
 //menu_init();
 //reboot();
   USART_printf("STARTING \n");
-    //joystick_init();
+
+
   //snake_run();
   //can_init(1);
 

@@ -45,7 +45,7 @@ void adc_init(){
     //test
     set_bit(ADMUX,REFS1);
     set_bit(ADMUX,REFS0);
-USART_printf("ADC  %d \n",adc_get_value());
+    //USART_printf("ADC  %d \n",adc_get_value());
     ADMUX &= ~(1 << MUX4) & ~(1 << MUX3) & ~(1 << MUX2) & ~(1 << MUX1) & ~(1 << MUX0);
   }
 
@@ -66,6 +66,7 @@ uint8_t adc_get_value(){
 
 int ir_check_signal(){
     uint8_t val = adc_get_value();
+    USART_printf("ADC  %d \n",val);
     #warning Add filter?
     if (val > 190){
         return 0;

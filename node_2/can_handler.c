@@ -38,6 +38,8 @@ ISR(INT2_vect){
             joy_button = recieved_msg.data[2];
             left_slider = recieved_msg.data[3];
             right_slider = recieved_msg.data[4];
+            right_touch_button = recieved_msg.data[5];
+            
             //solenoid_can_handler(&recieved_msg);
         case PINGPONG_GAME_START_ID:
             game_start = 1;

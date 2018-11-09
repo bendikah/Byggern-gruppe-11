@@ -12,8 +12,9 @@
 #define RIGHT_SLIDER		CHANNEL_2
 #define X_AXIS			CHANNEL_3
 #define Y_AXIS			CHANNEL_4
-#define JOYSTICK_BUTTON_PORT	PORTB
-#define JOYSTICK_BUTTON_PIN		0
+#define BUTTON_PORT	PORTB
+#define JOYSTICK_BUTTON_PIN		1
+#define TOUCH_BUTTON_RIGHT 2
 
 
 static struct Joystick_positions joystick_positions;
@@ -28,9 +29,13 @@ void joystick_init()
 	joystick_offsets.y_neutral = 128;
 	joystick_offsets.y_max = 255;
 	joystick_offsets.y_min = 0;
-
+	//Initialize joy_button
 	clear_bit( DDRB, 1 );
-	set_bit( JOYSTICK_BUTTON_PORT, 1);
+	set_bit(BUTTON_PORT, 1);
+
+	//Initialize right touch button
+	clear_bit(DDRB, TOUCH_BUTTON_RIGHT);
+	set_bit(BUTTON_PORT, TOUCH_BUTTON_RIGHT);
 
 	#ifdef JOYSTICK_CALIBRATE
 	joystick_calibrate();
@@ -107,6 +112,10 @@ int joystick_read_y(void){
 		return (1-(float)((joystick_offsets.y_max - out))/(joystick_offsets.y_max - joystick_offsets.y_neutral))*100;
 	}
 	return -(1-(float)((joystick_offsets.y_min - out))/(joystick_offsets.y_min - joystick_offsets.y_neutral))*100;
+}
+
+uint8_t right_touch_button_read(void){
+	return !!((PINB & (1 << TOUCH_BUTTON_RIGHT)));
 }
 
 uint8_t joystick_read_button(void){

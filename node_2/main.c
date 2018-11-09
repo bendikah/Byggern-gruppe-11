@@ -37,14 +37,29 @@ int main(void){
     PID_init();
     PID_timer_init();
     motor_init();
+    pwm_init();
+    solenoid_init();
     while(1){
     //if(game_start){
       //game_start = 0;
       //pingpong_init();
       //pingpong_start();
-      PID_print();
-      _delay_ms(2000);
+      //PID_print();
+      servo_set_angle((int8_t) joy_pos_x);
+      int signal = ir_check_signal();
+      if(signal == 0){
+          USART_printf("You lost a life \n");
+      }
+      else if(signal == 1){
+        USART_printf("new game starting \n");
+      }
+      if (right_touch_button){
+        solenoid_shoot();
+        USART_printf("SOLENOID KICK OFF \n");
 
+
+      }
+    //  _delay_ms(1000);
     //USART_printf("looping \n");
     //_delay_ms(2000);*/
   }

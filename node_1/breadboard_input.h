@@ -31,6 +31,6 @@ uint8_t joystick_read_button(void);
 
 uint8_t slider_read_left(void);
 uint8_t slider_read_right(void);
-
+uint8_t right_touch_button_read(void);
 
 #endif
