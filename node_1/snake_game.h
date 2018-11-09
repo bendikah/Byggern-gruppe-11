@@ -3,6 +3,7 @@
 
 void snake_run();
 void printMap();
+void printMap_sram();
 void initMap();
 void move(int dx, int dy);
 void snake_update();

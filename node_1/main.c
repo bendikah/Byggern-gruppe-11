@@ -29,7 +29,7 @@ int main(void){
   //set_bit(MCUCR, ISC01);
   //fdevopen(USART_Transmit, USART_Receive);
   //joystick_init();
-  SRAM_test();
+  //SRAM_test();
 	oled_sram_initialize();
 //_delay_ms(5000);
   //SRAM_test();
@@ -39,8 +39,8 @@ int main(void){
 //menu_init();
 //reboot();
   USART_printf("STARTING \n");
-    joystick_init();
-  snake_run();
+    //joystick_init();
+  //snake_run();
   //can_init(1);
 
   /*
@@ -54,16 +54,16 @@ int main(void){
   */
   //testing can
   //test_can();
-  /*
+
   USART_printf("test Motor\n");
   can_init(1);
   joystick_init();
   //Servo test
   while(1){
-  _delay_ms(100);
+  _delay_ms(50);
   joy_send_pos();
   }
-  */
+
 
 
 }

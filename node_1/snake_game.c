@@ -78,7 +78,6 @@ void snake_changeDirection() {
     }
 
     //new dir = get_button_value
-    USART_printf("newdir position %d %d\n",new_dir,position.x);
     if (new_dir == 1 && direction < 3){
       direction += 1;
       //printf("direction %d\n",direction);
@@ -100,7 +99,7 @@ void snake_changeDirection() {
 // Initializes map
 void initMap()
 {
-    // Places the initual head location in middle of map
+    // Places the initial head location in middle of map
     headxpos = mapwidth / 2;
     headypos = mapheight / 2;
     map[headxpos + headypos * mapwidth] = 1;
@@ -225,17 +224,30 @@ void clearScreen() {
 
 void printMap_sram()
 {
+    oled_sram_clear_screen();
     for (int x = 0; x < mapwidth; ++x) {
         for (int y = 0; y < mapheight; ++y) {
             // Prints the value at current x,y location
              oled_sram_put_char(getMapValue(map[x + y * mapwidth]));
 
-             USART_printf("%c",getMapValue(map[x + y * mapwidth]));
         }
         // Ends the line for next x value
-        oled_sram_print("\n");
-        USART_printf("\n");
+        oled_sram_put_char('\n');
 
     }
+
+
+    for (int x = 0; x < mapwidth; ++x) {
+        oled_goto_column(64);
+        for (int y = 0; y < mapheight; ++y) {
+            // Prints the value at current x,y location
+             oled_sram_put_char(getMapValue(map[x + y * mapwidth]));
+
+        }
+        // Ends the line for next x value
+        oled_sram_put_char('\n');
+
+    }
+
     oled_sram_update();
 }

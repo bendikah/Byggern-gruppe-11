@@ -21,15 +21,16 @@ int16_t kd;
 int16_t dt;
 int16_t control_input;
 
-int16_t position = 0;
+int16_t position;
 
 void PID_init(){
+	USART_printf("-------------------START---------\n");
 	position = 0;
 	reference = 0;
-	kp = 50;
+	kp = 1;
 	ki = 250;
-	kd = 0;
-	dt = 10;
+	kd = 1000;
+	dt = 100;
 	prevError = 0;
 	integral = 0;
 	control_input = 0;
@@ -40,6 +41,7 @@ void PID_print(){
 	USART_printf("control_input = %d \n", control_input);
 	USART_printf("reference = %d \n",reference);
 	USART_printf("position = %d \n",position);
+	USART_printf("derivative = %d \n", derivative/kd);
 	USART_printf("\n");
 }
 
@@ -52,7 +54,7 @@ void PID_update(){
 
 	//USART_printf("error = %d \n",error);
 
-	control_input = error/kp + integral/ki; // + kd*derivative;
+	control_input = error/kp+ derivative/kd;
 	//USART_printf("control_input = %d \n", control_input);
 	PID_update_system();
 }
@@ -99,7 +101,7 @@ void PID_timer_init(){
   //enable interrupt on comparing counter 3 compare B
   //set_bit(TIMSK3,OCIE3B);
   //set top mode
-  ICR3 = 65000;
+  ICR3 = 6500;
 	//OCR3A =30000;
 
 	/*
