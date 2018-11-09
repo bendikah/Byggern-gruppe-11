@@ -1,18 +1,15 @@
+#include <avr/io.h>
 #include <stdio.h>
+#include "global_defines.h"
+#include "util/delay.h"
+#include <stdint.h>
+#include "uart.h"
+#include "snake_game.h"
 #include <stdlib.h>
-#include <stdbool.h>
-#include <unistd.h>
+#include "breadboard_input.h"
+#include "oled.h"
 
-void run();
-void printMap();
-void initMap();
-void move(int dx, int dy);
-void update();
-void changeDirection();
-void clearScreen();
-void generateFood();
 
-char getMapValue(int value);
 
 // Map dimensions
 const int mapwidth = 10;
@@ -32,27 +29,20 @@ int direction =0;
 int food = 3;
 
 // Determine if game is running
-bool running;
+int running = 0;
 
-int main()
-{
-    //her må vi sette vanskelighetsgrad eg hvor ofte det oppdateres..
-    run();
-    return 0;
-}
 
-// Main game function
-void run()
-{
+
+void snake_run(){
     // Initialize the map
     initMap();
-    running = true;
+    running = 1;
     while (running) {
         // If a key is pressed
         // Change to direction determined by key pressed
-        changeDirection();
+        snake_changeDirection();
         // Upate the map
-        update();
+        snake_update();
 
         // Clear the screen
         clearScreen();
@@ -60,42 +50,43 @@ void run()
         // Print the map
         printMap();
 
+        //print map oled
+        printMap_sram();
+
         // wait 0.5 seconds
-        sleep(1);
-
-
-    }
-
+        _delay_ms(2000);
+}
     // Print out game over text
-    printf("game over, score is %d \n",food);
-
-    // Stop console from closing instantly
+    USART_printf("game over, score is %d \n",food);
 }
 
 
 // Changes snake direction from input
-void changeDirection() {
-    char number[1];
+void snake_changeDirection() {
+
+    struct Joystick_positions position = joystick_read_positions();
     int new_dir = 0;
-    printf("Type in a number \n");
-    scanf("%s", number);
-    if(number[0] == 'a'){
+
+    if(position.x > 50){
       new_dir = 1;
     }
-    else if(number[0] =='s'){
+    else if(position.x < -50){
       new_dir = 0;
+    }
+    else{
+        return;
     }
 
     //new dir = get_button_value
-    printf("newdir %d\n",new_dir);
+    USART_printf("newdir position %d %d\n",new_dir,position.x);
     if (new_dir == 1 && direction < 3){
       direction += 1;
-      printf("direction %d\n",direction);
+      //printf("direction %d\n",direction);
       return;
     }
     else if(new_dir == 1){
       direction = 0;
-      printf("direction %d\n",direction);
+      //printf("direction %d\n",direction);
       return;
     }
     if(new_dir == 0 && direction > 0){
@@ -103,7 +94,7 @@ void changeDirection() {
     }else{
       direction = 3;
     }
-    printf("direction %d\n",direction);
+    //printf("direction %d\n",direction);
 }
 
 // Initializes map
@@ -135,10 +126,12 @@ void printMap()
     for (int x = 0; x < mapwidth; ++x) {
         for (int y = 0; y < mapheight; ++y) {
             // Prints the value at current x,y location
-             printf("%c",getMapValue(map[x + y * mapwidth]));
+             //USART_printf("%c",getMapValue(map[x + y * mapwidth]));
+             oled_sram_print(getMapValue(map(x + y *mapwidth)));
         }
         // Ends the line for next x value
-        printf("\n");
+        //USART_printf("\n");
+        oled_goto_line(x+1);
     }
 }
 
@@ -154,11 +147,12 @@ char getMapValue(int value)
         // Return food
     case -2: return 'O';
     }
+    return ' ';
 }
 
 
 // Updates the map
-void update() {
+void snake_update() {
     // Move in direction indicated
     switch (direction) {
     case 0: move(-1, 0);
@@ -196,7 +190,7 @@ void move(int dx, int dy) {
 
     // Check location is free
     else if (map[newx + newy * mapwidth] != 0) {
-        running = false;
+        running = 0;
     }
 
     // Move head to new location
@@ -225,6 +219,20 @@ void generateFood() {
 
 // Clears screen
 void clearScreen() {
+    return;
     // Clear the screen
-    system("cls");
+    //system("cls");
+}
+
+
+void printMap_sram()
+{
+    for (int x = 0; x < mapwidth; ++x) {
+        for (int y = 0; y < mapheight; ++y) {
+            // Prints the value at current x,y location
+             oled_sram_print(getMapValue(map[x + y * mapwidth]));
+        }
+        // Ends the line for next x value
+        oled_printf("\n");
+    }
 }
