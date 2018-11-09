@@ -1,5 +1,5 @@
 # List all source files to be compiled; separate with space
-SOURCE_FILES := uart.c test_sram.c test.c adc.c breadboard_input.c sram.c main.c mcp_driver.c spi.c can.c interrupt.c joy_can.c can_messages.c oled_sram.c menu.c menu_pages.c load_and_save.c eeprom.c
+SOURCE_FILES := uart.c test_sram.c test.c adc.c breadboard_input.c sram.c main.c mcp_driver.c spi.c can.c interrupt.c joy_can.c can_messages.c oled_sram.c menu.c menu_pages.c load_and_save.c eeprom.c snake_game.c
 
 # Set this flag to "yes" (no quotes) to use JTAG; otherwise ISP (SPI) is used
 PROGRAM_WITH_JTAG := yes

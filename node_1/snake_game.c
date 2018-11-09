@@ -7,7 +7,7 @@
 #include "snake_game.h"
 #include <stdlib.h>
 #include "breadboard_input.h"
-#include "oled.h"
+#include "oled_sram.h"
 
 
 
@@ -44,7 +44,7 @@ void snake_run(){
         // Upate the map
         snake_update();
 
-        // Clear the screen
+        // Clear the screenhttps://github.com/bendikah/Byggern-gruppe-11.git
         clearScreen();
 
         // Print the map
@@ -126,12 +126,12 @@ void printMap()
     for (int x = 0; x < mapwidth; ++x) {
         for (int y = 0; y < mapheight; ++y) {
             // Prints the value at current x,y location
-             //USART_printf("%c",getMapValue(map[x + y * mapwidth]));
-             oled_sram_print(getMapValue(map(x + y *mapwidth)));
+             USART_printf("%c",getMapValue(map[x + y * mapwidth]));
+             //oled_sram_print(getMapValue(map[x + y *mapwidth]));
         }
         // Ends the line for next x value
-        //USART_printf("\n");
-        oled_goto_line(x+1);
+        USART_printf("\n");
+        //oled_goto_line(x+1);
     }
 }
 
@@ -142,7 +142,7 @@ char getMapValue(int value)
     if (value > 0) return 'o';
 
     switch (value) {
-        // Return wall
+        // Return walloled_goto_line(x+1);
     case -1: return 'X';
         // Return food
     case -2: return 'O';
@@ -233,6 +233,7 @@ void printMap_sram()
              oled_sram_print(getMapValue(map[x + y * mapwidth]));
         }
         // Ends the line for next x value
-        oled_printf("\n");
+        oled_goto_line(x+1);
     }
+  oled_sram_update();
 }
