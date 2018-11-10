@@ -28,7 +28,7 @@ int main(void){
   set_bit(MCUCR,SRE);
   //set_bit(MCUCR, ISC01);
   //fdevopen(USART_Transmit, USART_Receive);
-  //joystick_init();
+  joystick_init();
   //SRAM_test();
 	oled_sram_initialize();
 //_delay_ms(5000);
@@ -36,12 +36,28 @@ int main(void){
   //testThisShit();
   //test_adc();
   //oled_sram_print("hello world");
-//menu_init();
+  //menu_init();
 //reboot();
   USART_printf("STARTING \n");
 
+  struct Joystick_positions joystick_positions;
+/*
+  while(1){
+      joystick_positions = joystick_read_positions();
 
-
+      if (joystick_positions.y >= 40){
+          menu_decrement_branch();
+      }
+      else if (joystick_positions.y <= -40){
+          menu_increment_branch();
+      }
+      if (joystick_read_button()){
+          menu_next_page();
+      }
+      _delay_ms(1000);
+      USART_printf("Shits happening %d \n", joystick_positions.y);
+  }
+*/
   //can_init(1);
 
   /*

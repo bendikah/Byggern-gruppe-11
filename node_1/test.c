@@ -99,7 +99,7 @@ void test_mcp(){
 	USART_printf("this is the shit from mcp %x",readval);
 	#endif
 }
-
+/*
 void test_menu(void){
 	menu_init();
 	joystick_init();
@@ -121,4 +121,4 @@ void test_menu(void){
 		}
 		_delay_ms(1000);
 	}
-}
+}*/

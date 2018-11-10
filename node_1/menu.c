@@ -28,7 +28,7 @@ static void menu_print_welcome(char* user);
 void menu_init(){
 	menu_page_init();
 	menu_branch = 0;
-	current_page = &page_start;
+	current_page = &page_main;
 	menu_draw();
 }
 
@@ -45,7 +45,7 @@ void menu_draw(void){
 			draw_page_start();
 			break;
         default:
-            draw_page_main();
+            draw_page();
 	}
 }
 
@@ -80,6 +80,19 @@ void draw_page_start(){
 		}
 		//oled_printf("%s\n", page_main.strings[i]);
 		oled_sram_print(page_start.strings[i]);
+		oled_sram_print("\n");
+	}
+	oled_sram_update();
+}
+
+void draw_page(){
+	for (int i = 0; i < current_page->num_of_strings ; i++){
+		if (i == menu_branch){
+			//oled_printf("->");
+			oled_sram_print("->");
+		}
+		//oled_printf("%s\n", page_main.strings[i]);
+		oled_sram_print(current_page->strings[i]);
 		oled_sram_print("\n");
 	}
 	oled_sram_update();

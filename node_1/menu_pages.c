@@ -19,18 +19,52 @@ struct menu_page page_main = {
         .children[1] = &page_high_score,
         .children[2] = &page_settings,
         .children[3] = &page_credits,
-        .num_of_strings = 4,
+        .children[4] = &page_start,
+        .num_of_strings = 5,
         .strings[0] = "Play",
         .strings[1] = "High score",
         .strings[2] = "Settings",
-        .strings[3] = "Credits"
+        .strings[3] = "Credits",
+        .strings[4] = "Change user"
 };
 
 
 struct menu_page page_play = {
     .index = PLAY,
-    .label[0] = "Play"
+    .label[0] = "Play",
+    .parent = &page_main,
+    .children[0] = &page_pingpong,
+    .children[1] = &page_snake,
+    .children[2] = &page_main,
+    .num_of_strings = 2,
+    .strings[0] = "Pingpong",
+    .strings[1] = "Snake",
+    .strings[2] = "back"
 };
+
+struct menu_page page_pingpong = {
+    .index = PINGPONG,
+    .label[0] = "Pingpong",
+    .parent = &page_play,
+    .children[0] = &page_play,
+    .strings[0] = "Back"
+};
+struct menu_page page_snake = {
+    .index = SNAKE,
+    .label[0] = "Snake",
+    .parent = &page_play,
+    //.children[2] = &page_snake_difficulty,
+    .children[3] = &page_play,
+    .num_of_strings = 4,
+    .strings[0] = "Single player",
+    .strings[1] = "Multi player",
+    .strings[2] = "Difficulty",
+    .strings[3] = "Back"
+};/*
+struct menu_page page_snake_difficulty = {
+    .index = SNAKE_DIFFICULTY,
+    .label = "Snake difficulty",
+}*/
 struct menu_page page_high_score = {
     .index = HIGH_SCORE,
     .label[0] = "High score",
