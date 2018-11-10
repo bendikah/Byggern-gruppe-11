@@ -9,5 +9,6 @@ void PID_update_system();
 void PID_timer_init();
 void PID_can_handler(void);
 void PID_set_ref(uint8_t ref);
+void PID_stop();
 
 #endif

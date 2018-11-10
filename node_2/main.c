@@ -45,6 +45,8 @@ int main(void){
             msg_lost_game.data[0] = points;
             can_transmit(&msg_lost_game);
         }
+        USART_printf("not starting...\n");
+        _delay_ms(2000);
 
 
     }

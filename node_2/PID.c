@@ -132,6 +132,9 @@ void PID_set_ref(uint8_t ref){
 	reference = ref*4*9-360;
 #warning thiss is just some simple scaling. Should be better
 }
+void PID_stop(){
+  clear_bit(TIMSK3,OCIE3A);
+}
 
 
 ISR(TIMER3_COMPA_vect){

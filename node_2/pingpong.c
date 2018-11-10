@@ -31,22 +31,24 @@ void pingpong_init(){
 
 uint8_t pingpong_start(){
     #warning also use difficulty
-    while(ir_check_signal()){
+    /*while(ir_check_signal()){
         can_transmit(&msg_remove_ball);
         _delay_ms(500);
-    }
+    }*/
     can_transmit(&msg_game_starting);
     pingpong_timer_start();
     while(1){
         servo_set_angle((int8_t) joy_pos_x);
+        USART_printf("joy_pos_x = %d\n",joy_pos_x);
         int signal = ir_check_signal();
-        if(signal == 0){
+        /*if(signal == 0){
             break;
-        }
+        }*/
         if (right_touch_button){
           solenoid_shoot();
 
         }
+        _delay_ms(1000);
     }
 
         //recieve can message with ID joy_sliders...
@@ -67,6 +69,7 @@ uint8_t pingpong_start(){
 
     //Send a can message to node 1 about the loss. (make oled print some stuff);
     pingpong_timer_stop();
+    PID_stop();
     return number_of_points;
 
 }
