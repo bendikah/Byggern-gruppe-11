@@ -15,6 +15,7 @@
 #define BUTTON_PORT	PORTB
 #define JOYSTICK_BUTTON_PIN		1
 #define TOUCH_BUTTON_RIGHT 2
+#define TOUCH_BUTTON_LEFT 3
 
 
 static struct Joystick_positions joystick_positions;
@@ -33,10 +34,11 @@ void joystick_init()
 	clear_bit( DDRB, 1 );
 	set_bit(BUTTON_PORT, 1);
 
-	//Initialize right touch button
+	//Initialize touch buttons
 	clear_bit(DDRB, TOUCH_BUTTON_RIGHT);
 	set_bit(BUTTON_PORT, TOUCH_BUTTON_RIGHT);
-
+	clear_bit(DDRB, TOUCH_BUTTON_LEFT);
+	set_bit(BUTTON_PORT, TOUCH_BUTTON_LEFT);
 	#ifdef JOYSTICK_CALIBRATE
 	joystick_calibrate();
 	#endif
@@ -116,6 +118,9 @@ int joystick_read_y(void){
 
 uint8_t right_touch_button_read(void){
 	return !!((PINB & (1 << TOUCH_BUTTON_RIGHT)));
+}
+uint8_t left_touch_button_read(void){
+	return !!((PINB & (1 << TOUCH_BUTTON_LEFT)));
 }
 
 uint8_t joystick_read_button(void){

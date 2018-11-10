@@ -10,42 +10,44 @@
 #include "util/delay.h"
 #include "PID.h"
 #include "ir.h"
+#include "can_handler.h"
+#include "can_messages.h"
 
 uint8_t number_of_points;
 
 
 void pingpong_init(){
     pingpong_timer_init();
+    ir_init();
+    encoder_init();
+    PID_init();
+    PID_timer_init();
+    motor_init();
+    pwm_init();
+    solenoid_init();
     //set motor init solenoid init ?? up for discussion
 
 }
 
-void pingpong_start(){
-
-
-    while(1){
-      if(ir_check_signal() == 0){
-      //send msg to node 1 remove ball
-      USART_printf("REMOVE BALL YOU MORON \n");
-
-
+uint8_t pingpong_start(){
+    #warning also use difficulty
+    while(ir_check_signal()){
+        can_transmit(&msg_remove_ball);
+        _delay_ms(500);
     }
-      if(ir_check_signal() == 1){
-        USART_printf("ok now you can play \n");
-        break;
-      }
-    }
+    can_transmit(&msg_game_starting);
     pingpong_timer_start();
-    number_of_points = 0;
     while(1){
-        //if IR gets broken than brake the loop
-        /*
-         * if (ir_detect_brake()){brake;}
-         */
-        if (ir_check_signal() == 0){
-
+        servo_set_angle((int8_t) joy_pos_x);
+        int signal = ir_check_signal();
+        if(signal == 0){
             break;
         }
+        if (right_touch_button){
+          solenoid_shoot();
+
+        }
+    }
 
         //recieve can message with ID joy_sliders...
         /*can_extract_msg(&msg);*/
@@ -60,12 +62,12 @@ void pingpong_start(){
         //use joydata to set servo_angle
 #warning thiss is wrong number since data is uint but the function needs an int from -100 to 100.
       //  servo_set_angle(msg.data[0]);
-    }
 
     //when entering this you have lost the game
 
     //Send a can message to node 1 about the loss. (make oled print some stuff);
     pingpong_timer_stop();
+    return number_of_points;
 
 }
 
@@ -96,7 +98,6 @@ void pingpong_timer_start(){
 }
 
 ISR(TIMER4_COMPA_vect){
-  USART_printf("working \n");
   number_of_points ++;
 
 }

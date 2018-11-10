@@ -20,7 +20,7 @@
 #include "spi.h"
 #include "load_and_save.h"
 #include "eeprom.h"
-
+#include "snake_game.h"
 
 int main(void){
   //DDRA = 0xFF;
@@ -41,7 +41,7 @@ int main(void){
   USART_printf("STARTING \n");
 
 
-  //snake_run();
+
   //can_init(1);
 
   /*
@@ -60,6 +60,8 @@ int main(void){
   can_init(1);
   joystick_init();
   //Servo test
+  _delay_ms(2000);
+  can_transmit(&msg_game_start);
   while(1){
   _delay_ms(50);
   joy_send_pos();

@@ -7,6 +7,8 @@
 #include "can.h"
 
 void can_handler_init(void){
+    ball_in_way = 1;
+    pingpong_running = 0;
 
   //set global interrupts
   SREG |= (1<<7);
@@ -30,7 +32,12 @@ ISR(INT0_vect){
 
     //USART_printf("Recieved something? \n");
     switch (recieved_msg.id) {
-
+        case REMOVE_BALL_ID:
+            ball_in_way = 1;
+            break;
+        case GAME_STARTING_ID:
+            ball_in_way = 0;
+            break;
         default:
           break;
 

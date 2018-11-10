@@ -11,4 +11,8 @@
 
 #define PINGPONG_GAME_START_ID NODE1 | 0x01
 
+#define LOST_GAME_ID NODE2 | 0x00
+#define REMOVE_BALL_ID NODE2 | 0x01
+#define GAME_STARTING_ID NODE2 | 0x02
+
 #endif

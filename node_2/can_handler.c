@@ -39,9 +39,10 @@ ISR(INT2_vect){
             left_slider = recieved_msg.data[3];
             right_slider = recieved_msg.data[4];
             right_touch_button = recieved_msg.data[5];
-            
+            break;
             //solenoid_can_handler(&recieved_msg);
         case PINGPONG_GAME_START_ID:
+        USART_printf ("Game should start\n");
             game_start = 1;
             difficulty = recieved_msg.data[0];
 
