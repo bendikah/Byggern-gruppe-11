@@ -157,6 +157,7 @@ void oled_sram_clear_bit(uint16_t addr, uint8_t bit){
 
 
 void oled_put_char_line(uint8_t c, int line){
+
     c -= 32;
     for (uint8_t i = 0; i < oled_get_char_length(); i++){
         switch (char_size){
@@ -182,17 +183,16 @@ void oled_sram_print_line(char *string, int line){
 }
 
 void oled_sram_shift_whole_shit_one_bit(){
-  for (uint16_t i = 0; i < 7*128; i++){
-    //if (i >= 128) {
-    sram_write(i, sram_read(i) >> 1);
-
-      if (test_bit(sram_read(i+128),0)){
+  for (uint16_t i = 0; i < 1024; i++){
+    if (i >= 128) {
+      if (test_bit(sram_read(i),0)){
 //      if (oled_sram_read_bit(i,7)){
-        oled_sram_set_bit(i,7);
+        oled_sram_set_bit(i-128,7);
       }
       else {
-        oled_sram_clear_bit(i,7);
+        oled_sram_clear_bit(i-128,7);
       }
-    //}
+    }
+    sram_write(i, sram_read(i) >> 1);
   }
 }
