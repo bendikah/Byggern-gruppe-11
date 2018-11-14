@@ -237,40 +237,36 @@ void draw_page_credits_better(){
 					}
 
 			oled_sram_update();
-			USART_printf(page_credits_strings[1]);
-			_delay_ms(40);
+
+
 
 		}
+
+	}
+	for (uint8_t i = 0; i < 64; i++){
+		oled_sram_shift_whole_shit_one_bit();
+		oled_sram_update();
 
 	}
 }
 
 void draw_page_credits(){
-	for (int i = 7; i >= 0; i--){
-			oled_sram_clear_screen();
-		for (int j = 0; j < 7 - i; j++){
-			oled_goto_line(i + j);
-			oled_goto_column(0);
-			//oled_printf(page_credits.strings[j]);
-			oled_sram_print(page_credits_strings[j]);
-		}
-		oled_sram_update();
-		_delay_ms(500);
-	}
-	for (int i = 1; i < page_credits.num_of_strings+1; i++){
+	for (uint8_t i = 0; i < 7*2;i ++){ //page Credits
+			for(uint8_t k = 7; k > 0; k--){
+				oled_goto_line(7);
+				oled_sram_shift_whole_shit_one_bit();
+					if (i%2 == 0){
+				oled_sram_print_line(page_credits_strings[i/2],k);
+					}
 
-		oled_sram_clear_screen();
-		for (int j = 0; j < 8 ; j++){
-			oled_goto_line(j);
-			oled_goto_column(0);
-			if (i + j >= page_credits.num_of_strings+1){
-				break;
-			}
-			oled_sram_print(page_credits_strings[i + j]);
-			//oled_printf(page_credits.strings[i+j]);
+			oled_sram_update();
 		}
+
+	}
+	for (uint8_t i = 0; i < 64; i++){
+		oled_sram_shift_whole_shit_one_bit();
 		oled_sram_update();
-		_delay_ms(500);
+
 	}
 	menu_previous_page();
 

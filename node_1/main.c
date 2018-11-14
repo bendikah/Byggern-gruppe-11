@@ -80,12 +80,12 @@ int main(void){
     _delay_ms(40);
   }
   */
-  draw_page_credits_better();
-  oled_sram_update();
-  _delay_ms(5000);
+  //draw_page_credits_better();
+  //oled_sram_update();
+  //_delay_ms(5000);
   //add_user(1);
 
-  //test_menu();
+  test_menu();
 
 
   struct Joystick_positions joystick_positions;
