@@ -56,7 +56,7 @@ int main(void){
   oled_sram_update();*/
 //_delay_ms(3000);
 
-
+  /*
   save_user(1,user_1);
   oled_sram_clear_screen();
   save_high_score(0,"eiv",254);
@@ -64,16 +64,28 @@ int main(void){
   save_high_score(2,"ben",7);
   save_high_score(3,"eiv",4);
   save_high_score(4,"ben",1);
+  */
+  /*
+  oled_sram_clear_screen();
+  oled_sram_print("Halla\n");
+  oled_sram_print("Hva skjer\n");
+  oled_sram_print("Io man!\n");
 
-  for (int i = 0; i < 3; i++){
-    USART_printf("%c \n",load_user(1,i));
+  */
 
+  /*
+  for (int i = 0; i < 25;i++){
+    oled_sram_shift_whole_shit_one_bit();
+    oled_sram_update();
+    _delay_ms(40);
   }
-    USART_printf("value = %d \n",load_high_score_score(1));
-  _delay_ms(2000);
+  */
+  draw_page_credits_better();
+  oled_sram_update();
+  _delay_ms(5000);
   //add_user(1);
 
-  test_menu();
+  //test_menu();
 
 
   struct Joystick_positions joystick_positions;

@@ -228,8 +228,21 @@ void draw_page_high_score(){
 char* page_credits_strings[7] = {"THANKS TO","BERNT JOHAN","VEGARD","KOLBJORN","BENDIK","EIVIND","ROBERT"};
 
 void draw_page_credits_better(){
-	return;
+	for (uint8_t i = 0; i < 7*2;i ++){ //page Credits
+			for(uint8_t k = 7; k > 0; k--){
+				oled_goto_line(7);
+				oled_sram_shift_whole_shit_one_bit();
+					if (i%2 == 0){
+				oled_sram_print_line(page_credits_strings[i/2],k);
+					}
 
+			oled_sram_update();
+			USART_printf(page_credits_strings[1]);
+			_delay_ms(40);
+
+		}
+
+	}
 }
 
 void draw_page_credits(){

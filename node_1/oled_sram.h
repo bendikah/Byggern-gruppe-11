@@ -10,12 +10,12 @@ void oled_sram_update(void);
 void oled_goto_line(int line);
 void oled_goto_column(int col);
 
-/*
-void oled_sram_print_down_shifted(uint8_t* string, int shift_bits);
-void oled_put_char_down_shifted(uint8_t c, int shift_bits);
+
+void oled_sram_print_line(char *string, int shift_bits);
+void oled_put_char_line(uint8_t c, int shift_bits);
 void oled_sram_set_bit(uint16_t addr, uint8_t bit);
 void oled_sram_clear_bit(uint16_t addr, uint8_t bit);
 uint8_t oled_sram_read_bit(uint16_t addr, uint8_t bit);
 void oled_sram_shift_whole_shit_one_bit();
-*/
+
 #endif
