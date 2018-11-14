@@ -13,14 +13,14 @@
 
 void reboot();
 
-char* load_user(unsigned int number);
+char load_user(uint8_t number, uint8_t letter);
 
-char* load_high_score_name(unsigned int number);
-uint8_t load_high_score_score(unsigned int number);
+char load_high_score_name(uint8_t number, uint8_t letter);
+uint8_t load_high_score_score(uint8_t number);
 
-void save_user(unsigned int number, char* user_name);
+void save_user(uint8_t number, char* user_name);
 
-void save_high_score(unsigned int number, char* user_name, uint8_t score);
+void save_high_score(uint8_t number, char* user_name, uint8_t score);
 
 
 

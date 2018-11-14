@@ -17,11 +17,11 @@ struct menu_page;
 
 struct menu_page {
     uint8_t index;
-    char* label[MAX_MENU_TITLE_SIZE];
+    //char* label[MAX_MENU_TITLE_SIZE];
     struct menu_page* parent;
     struct menu_page* children[MAX_MENU_CHILDREN];
     uint8_t num_of_strings;
-    const char* strings[MAX_MENU_STRINGS];
+    //const char* strings[MAX_MENU_STRINGS];
 
 };
 

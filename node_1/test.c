@@ -11,6 +11,7 @@
 #include "spi.h"
 #include "mcp_driver.h"
 
+
 void testThisShit(void){
 	DDRA = 0xFF;
 	set_bit(PORTA,6);
@@ -99,7 +100,7 @@ void test_mcp(){
 	USART_printf("this is the shit from mcp %x",readval);
 	#endif
 }
-/*
+
 void test_menu(void){
 	menu_init();
 	joystick_init();
@@ -116,9 +117,9 @@ void test_menu(void){
 		else if (joystick_positions.y <= -40){
 			menu_increment_branch();
 		}
-		if (joystick_read_button()){
+		if (right_touch_button_read()){
 			menu_next_page();
 		}
 		_delay_ms(1000);
 	}
-}*/
+}

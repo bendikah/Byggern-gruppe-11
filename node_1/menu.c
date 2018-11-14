@@ -6,6 +6,8 @@
 #include "util/delay.h"
 #include <stdint.h>
 #include "uart.h"
+#include "snake_game.h"
+#include "breadboard_input.h"
 
 
 
@@ -16,6 +18,7 @@
 static int8_t menu_branch;
 static struct menu_page* current_page;
 static char current_user[3];
+static uint8_t user;
 
 
 
@@ -23,13 +26,76 @@ static char current_user[3];
 static void draw_page_start();
 static void draw_page_main();
 static void draw_page_credits();
-static void menu_print_welcome(char* user);
+static void menu_print_welcome(uint8_t user);
+static void draw_page_play();
+static void draw_page_high_score();
+static void draw_page_settings();
+static void draw_page_pingpong();
+static void draw_page_snake();
+static void draw_page_snake_difficulty();
 
 void menu_init(){
-	menu_page_init();
 	menu_branch = 0;
 	current_page = &page_main;
 	menu_draw();
+}
+
+
+void add_user(uint8_t user_pos){
+	oled_sram_clear_screen();
+	_delay_ms(500);
+	char letter = 'A';
+	uint8_t i = 0;
+	struct Joystick_positions joystick_positions;
+	oled_goto_line(1);
+	oled_sram_print("ADD USER");
+	oled_goto_line(3);
+	oled_goto_column(0);
+	oled_sram_put_char('^');
+	oled_goto_line(5);
+	oled_goto_column(0);
+	oled_sram_put_char('v');
+	oled_goto_line(4);
+
+	while(1){
+		oled_goto_line(4);
+		oled_goto_column(i*8);
+		oled_sram_put_char(letter);
+		joystick_positions = joystick_read_positions();
+		if (joystick_positions.y >= 40){
+			letter++;
+		}
+		else if (joystick_positions.y <= -40){
+			letter--;
+		}
+		if (joystick_read_button()){
+			current_user[i] = letter;
+			letter = 'A';
+			i++;
+			if(i == 3){
+				_delay_ms(500);
+				oled_sram_update();
+			break;}
+			oled_goto_line(3);
+			oled_goto_column((i-1)*8);
+			oled_sram_put_char(' ');
+			oled_sram_put_char('^');
+			oled_goto_line(5);
+			oled_goto_column((i-1)*8);
+			oled_sram_put_char(' ');
+			oled_sram_put_char('v');
+			oled_goto_line(4);
+			_delay_ms(500);
+		}
+
+
+
+		oled_sram_update();
+
+		_delay_ms(100);
+	}
+	save_user(user_pos,current_user);
+	user = user_pos;
 }
 
 void menu_draw(void){
@@ -44,8 +110,18 @@ void menu_draw(void){
 		case START:
 			draw_page_start();
 			break;
+		case PLAY:
+			draw_page_play();
+			break;
+		case HIGH_SCORE:
+			draw_page_high_score();
+			break;
+		case SNAKE:
+			draw_page_snake();
+
         default:
-            draw_page();
+				return;
+
 	}
 }
 
@@ -70,68 +146,96 @@ int8_t get_menu_branch(){
 }
 
 void draw_page_start(){
-	for (int i = 0; i < page_start.num_of_strings ; i++){
-		if (page_start.strings[i] == "-"){
+	char temp_user[3];
+	oled_sram_print("---CHOOSE USER---");
+	oled_sram_put_char('\n');
+	uint8_t i;
+	for (i = 0; i < 2 ; i++){
+		/*if (page_start.strings[i] == "-"){
 			continue;
-		}
+		}*/
 		if (i == menu_branch){
 			//oled_printf("->");
 			oled_sram_print("->");
 		}
 		//oled_printf("%s\n", page_main.strings[i]);
-		oled_sram_print(page_start.strings[i]);
+		for (uint8_t j = 0; j < 3; j++){
+			oled_sram_put_char(load_user(i,j));
+		}
+		//oled_sram_print(page_start.strings[i]);
 		oled_sram_print("\n");
 	}
+	if (i == menu_branch){
+		//oled_printf("->");
+		oled_sram_print("->");
+	}
+	i++;
+	oled_sram_print("GST");
+	oled_sram_print("\n");
+	if (i == menu_branch){
+		//oled_printf("->");
+		oled_sram_print("->");
+	}
+	oled_sram_print("ADD USER");
 	oled_sram_update();
+
+	return;
 }
 
-void draw_page(){
-	for (int i = 0; i < current_page->num_of_strings ; i++){
-		if (i == menu_branch){
-			//oled_printf("->");
-			oled_sram_print("->");
-		}
-		//oled_printf("%s\n", page_main.strings[i]);
-		oled_sram_print(current_page->strings[i]);
-		oled_sram_print("\n");
-	}
-	oled_sram_update();
-}
+char* page_main_strings[5] = {"-----MAIN-----","PLAY","HIGH_SCORE","CREDITS","CHANGE USER"};
 
 void draw_page_main(){
-	for (int i = 0; i < page_main.num_of_strings ; i++){
-		if (i == menu_branch){
+
+	for (int i = 0; i < 5; i++){
+		if (i-1 == menu_branch){
 			//oled_printf("->");
 			oled_sram_print("->");
 		}
-		//oled_printf("%s\n", page_main.strings[i]);
-		oled_sram_print(page_main.strings[i]);
+
+		oled_sram_print(page_main_strings[i]);
 		oled_sram_print("\n");
 	}
 	oled_sram_update();
+
 }
 
 void draw_page_high_score(){
-	for (int i = 0; i < page_high_score.num_of_strings; i++){
-		//oled_printf("%i. %s\n", i, page_high_score.strings[i]);
-#warning print out numbers
-		//oled_sram_print()
-		oled_sram_print(page_high_score.strings[i]);
+
+	oled_sram_print("--HALL OF FAME-- \n");
+	for(uint8_t i = 0; i < page_high_score.num_of_strings; i ++){
+		for(uint8_t j = 0; j < 3; j ++){
+			oled_sram_put_char(load_high_score_name(i,j));
+
+		}
+		oled_sram_print(" score: ");
+		uint8_t temp_score = load_high_score_score(i);
+		char streng[4];// = {0,0,0};
+		sprintf(streng, "%d", temp_score);
+		for (uint8_t n = 0; n < (uint8_t)ceil(log10(temp_score+1)); n++){
+	    oled_sram_put_char(streng[n]);
+	  }
 		oled_sram_print("\n");
 	}
+
 	oled_sram_update();
+	_delay_ms(5000);
+	menu_branch = 0;
+	current_page = &page_main;
+	menu_draw();
 }
 
 
+char* page_credits_strings[7] = {"THANKS TO","BERNT JOHAN","VEGARD","KOLBJORN","BENDIK","EIVIND","ROBERT"};
 
 void draw_page_credits(){
+
 	for (int i = 7; i >= 0; i--){
 			oled_sram_clear_screen();
-		for (int j = 0; j < 8 - i; j++){
+		for (int j = 0; j < 7 - i; j++){
 			oled_goto_line(i + j);
 			oled_goto_column(0);
 			//oled_printf(page_credits.strings[j]);
-			oled_sram_print(page_credits.strings[j]);
+			oled_sram_print(page_credits_strings[j]);
 		}
 		oled_sram_update();
 		_delay_ms(500);
@@ -142,17 +246,52 @@ void draw_page_credits(){
 		for (int j = 0; j < 8 ; j++){
 			oled_goto_line(j);
 			oled_goto_column(0);
-			if (i + j >= page_credits.num_of_strings){
+			if (i + j >= page_credits.num_of_strings+1){
 				break;
 			}
-			oled_sram_print(page_credits.strings[i + j]);
+			oled_sram_print(page_credits_strings[i + j]);
 			//oled_printf(page_credits.strings[i+j]);
 		}
 		oled_sram_update();
 		_delay_ms(500);
 	}
 	menu_previous_page();
+
 }
+char* page_play_strings[4] = {"-----PLAY-----","PINGPONG","SNAKE","BACK"};
+
+static void draw_page_play(){
+	for (int i = 0; i < 4; i++){
+		if (i-1 == menu_branch){
+			//oled_printf("->");
+			oled_sram_print("->");
+		}
+
+		oled_sram_print(page_play_strings[i]);
+		oled_sram_print("\n");
+	}
+	oled_sram_update();
+
+	return;
+}
+
+static void draw_page_pingpong(){return;};
+
+char* page_snake_strings[5] = {"----SNAKE-----","SINGLE PLAYER","MULTI PLAYER","SETTINGS", "BACK"};
+static void draw_page_snake(){
+	for (int i = 0; i < 5; i++){
+		if (i-1 == menu_branch){
+			//oled_printf("->");
+			oled_sram_print("->");
+		}
+
+		oled_sram_print(page_snake_strings[i]);
+		oled_sram_print("\n");
+	}
+	oled_sram_update();
+	return;
+}
+static void draw_page_snake_difficulty(){return;}
 /* To make it more starwars look-a-like we can have one line between the strings. And print the same
  * string row twice, but left and right shit to get the ends meeting.
  * Robert, your an amazing detective-slash-genius
@@ -160,23 +299,47 @@ void draw_page_credits(){
 //char* current_user;
 
 void menu_next_page(){
-    if (current_page->children == NULL){
-				return;
-		}
 		switch (current_page->index){
 			case (START):
-				oled_sram_clear_screen();
-					//current_user = page_start.strings[menu_branch];
+
+
+					if (menu_branch == 3){
+						add_user(0);
+					}
+					else {
+						user = menu_branch;
+					}
 					menu_branch = 0;
-					menu_print_welcome(current_user);
+					oled_sram_clear_screen();
+					menu_print_welcome(user);
 					_delay_ms(1500);
 					break;
 			case (MAIN):
 					break;
+			case (HIGH_SCORE):
+					//draw_page_high_score();
+					break;
+			case (SNAKE):
+					if (menu_branch == 0){
+						int val = snake_run(0);
+						//SAVE SCORE and print user scores
+						oled_goto_line(4);
+						oled_goto_column(8);
+						oled_sram_print("SORRY YOU LOST");
+						oled_sram_update();
+						_delay_ms(4000);
+
+					}
+					else if (menu_branch == 1){
+						snake_play_both();
+					}
 		}
-		current_page = current_page->children[menu_branch];
+		if (current_page->children[menu_branch] != NULL){
+			current_page = current_page->children[menu_branch];
+		}
 		menu_branch = 0;
 		menu_draw();
+
 }
 void menu_previous_page(){
     if (current_page->parent == NULL) {
@@ -187,12 +350,16 @@ void menu_previous_page(){
     menu_draw();
 }
 
-void menu_print_welcome(char* user){
+
+void menu_print_welcome(uint8_t user){
 	oled_goto_line(3);
 	oled_goto_column(10);
 	oled_sram_print("Welcome ");
-	#warning user is not a string
-	oled_sram_print(user);
+	if (user < 2){
+		for (int i = 0; i < 3; i++){
+				oled_sram_put_char(load_user(user,i));
+			}
+		}
 	oled_sram_update();
 	_delay_ms(1000);
 	oled_goto_line(4);

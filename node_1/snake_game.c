@@ -114,6 +114,8 @@ uint8_t snake_run(uint8_t difficulty){
             case 1:
             _delay_ms(1000);
             break;
+            default:
+            _delay_ms(1000);
 
         }
 
@@ -193,6 +195,11 @@ void snake2_changeDirection() {
 // Initializes map
 void initMap(struct Snake_game* snake)
 {
+    //clear map before init
+    for (int i = 0; i < snake->mapwidth*snake->mapheight; i++){
+      snake->map[i] = 0;
+    }
+
     // Places the initial head location in middle of map
     snake->headxpos = snake->mapwidth / 2;
     snake->headypos = snake->mapheight / 2;

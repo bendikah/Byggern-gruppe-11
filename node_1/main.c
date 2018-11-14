@@ -38,7 +38,43 @@ int main(void){
   //oled_sram_print("hello world");
   //menu_init();
 //reboot();
+
   USART_printf("STARTING \n");
+  char user_1[] = {'e','i','v'};
+  char user_2[] = {'r','o','b'};
+  save_user(0,user_1);
+  save_user(1,user_2);
+
+/*oled_sram_clear_screen();
+  int u = 333;
+  char streng[4];// = {0,0,0};
+  sprintf(streng, "%d", u);
+
+  for (int i = 0; i < (uint8_t)ceil(log10(u)); i++){
+    oled_sram_put_char(streng[i]);
+  }
+  oled_sram_update();*/
+//_delay_ms(3000);
+
+
+  save_user(1,user_1);
+  oled_sram_clear_screen();
+  save_high_score(0,"eiv",254);
+  save_high_score(1,"rob",10);
+  save_high_score(2,"ben",7);
+  save_high_score(3,"eiv",4);
+  save_high_score(4,"ben",1);
+
+  for (int i = 0; i < 3; i++){
+    USART_printf("%c \n",load_user(1,i));
+
+  }
+    USART_printf("value = %d \n",load_high_score_score(1));
+  _delay_ms(2000);
+  //add_user(1);
+
+  test_menu();
+
 
   struct Joystick_positions joystick_positions;
 /*
