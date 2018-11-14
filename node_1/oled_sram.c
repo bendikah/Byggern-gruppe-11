@@ -133,3 +133,61 @@ void oled_goto_column(uint8_t column)
 {
     current_col = column;
 }
+
+
+
+/*
+uint8_t oled_sram_read_bit(uint16_t addr, uint8_t bit){
+  uint8_t val = 0b00000001<<bit;
+  return (sram_read(addr) & val);
+}
+
+void oled_sram_set_bit(uint16_t addr, uint8_t bit){
+  uint8_t val = 0b00000001<<bit;
+  sram_write(addr | val);
+}
+
+void oled_sram_clear_bit(uint16_t addr, uint8_t bit){
+  uint8_t val = 0b00000001<<bit;
+  sram_write(addr & ~val);
+}
+
+
+void oled_put_char_down_shifted(uint8_t c, int shift_bits){
+  c -= 32;
+  for (uint8_t i = 0; i < oled_get_char_length(); i++){
+      switch (char_size){
+          case ('L'):
+              sram_write((pgm_read_byte(&(font8[c][i]))) << shift_bits);
+              break;
+          case ('M'):
+              sram_write((pgm_read_byte(&(font5[c][i]))) << shift_bits);
+              break;
+          case ('S'):
+              sram_write((pgm_read_byte(&(font4[c][i]))) << shift_bits);
+              break;
+      }
+  }
+}
+
+void oled_sram_print_down_shifted(uint8_t* string, int shift_bits){
+  for (uint8_t i = 0; i < strlen(string); i++){
+      oled_put_char_up_shifted(string[i], shift_bits);
+      //oled_goto_column(current_col+oled_get_char_length());
+  }
+}
+
+void oled_sram_shift_whole_shit_one_bit(){
+  for (uint8_t i = 0; i < 1024; i++){
+    if (i >= 128) {
+      if (oled_sram_read_bit(i,7)){
+        oled_sram_set_bit(i-128);
+      }
+      else {
+        oled_sram_clear_bit(i-128);
+      }
+    }
+    sram_write(i) = sram_read(i) << 1;
+  }
+}
+*/

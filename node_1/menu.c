@@ -227,8 +227,12 @@ void draw_page_high_score(){
 
 char* page_credits_strings[7] = {"THANKS TO","BERNT JOHAN","VEGARD","KOLBJORN","BENDIK","EIVIND","ROBERT"};
 
-void draw_page_credits(){
+void draw_page_credits_better(){
+	return;
 
+}
+
+void draw_page_credits(){
 	for (int i = 7; i >= 0; i--){
 			oled_sram_clear_screen();
 		for (int j = 0; j < 7 - i; j++){
