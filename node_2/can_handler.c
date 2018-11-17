@@ -42,7 +42,7 @@ ISR(INT2_vect){
             break;
             //solenoid_can_handler(&recieved_msg);
         case PINGPONG_GAME_START_ID:
-        USART_printf ("Game should start\n");
+        USART_printf ("Game should start id = %x\n", recieved_msg.id);
             game_start = 1;
             difficulty = recieved_msg.data[0];
 

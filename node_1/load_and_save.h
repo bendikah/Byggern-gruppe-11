@@ -22,6 +22,8 @@ void save_user(uint8_t number, char* user_name);
 
 void save_high_score(uint8_t number, char* user_name, uint8_t score);
 
+void save_score(uint8_t user,uint8_t points);
+
 
 
 #endif

@@ -30,6 +30,9 @@ struct Snake_game snake2 = {
 };
 
 void snake_play_both(){
+    snake1.mapheight = 8;
+    snake1.mapwidth = 8;
+    snake1.size = 64;
     snake_init(&snake1);
     snake_init(&snake2);
     uint8_t i = 0;
@@ -43,7 +46,6 @@ void snake_play_both(){
         _delay_ms(1000);
         i++;
     }
-    USART_printf("You lost\n");
 }
 
 void snake_init(struct Snake_game* snake){
@@ -223,7 +225,7 @@ void initMap(struct Snake_game* snake)
 }
 
 void printMap()
-{
+{/*
     for (int x = 0; x < snake1.mapwidth; ++x) {
         for (int y = 0; y < snake1.mapheight; ++y) {
             // Prints the value at current x,y location
@@ -231,7 +233,7 @@ void printMap()
         }
         // Ends the line for next x value
         USART_printf("\n");
-    }
+    }*/
     return;
 }
 

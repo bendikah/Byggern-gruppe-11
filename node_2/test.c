@@ -13,6 +13,7 @@
 #include "can_handler.h"
 #include "solenoid.h"
 #include "ir.h"
+#include "can_messages.h"
 
 #warning should probably be put somewhere else??
 #define JOY_THRESHOLD   30
@@ -110,17 +111,17 @@ void test_can(){
 
   can_message new_msg;
   can_message msg;
-  msg.id = 1;
-  msg.length = 3;
-  msg.data[0] = 7;
-  msg.data[1] = 2;
-  msg.data[2] = 0;
+  msg.id = 31;
+  msg.length = 0;
+  //msg.data[0] = 7;
+  //msg.data[1] = 2;
+  //msg.data[2] = 0;
 
   int i = 0;
 
   while(1){
     i++;
-    can_transmit(&msg);
+    can_transmit(&msg_lost_game);
     _delay_ms(2000);
     msg.data[2] = i;
     can_recieve(&new_msg);

@@ -44,3 +44,31 @@ void reboot(){
       save_user(i, "-");
     }
 }
+
+void save_score(uint8_t user,uint8_t points){
+    uint8_t placement = 5;
+    char temp_user[3];
+    uint8_t temp_score;
+    for (uint8_t i = 0; i < 5; i++){
+        if(load_high_score_score(i) < points){
+            /*
+            iterate from bottom to i;
+            load user and points and save at placement below
+            save this user and points at placement i.
+            */
+            for (uint8_t j = 4; j > i; j--){
+                for (uint8_t k = 0; k < 3; k++){
+                    temp_user[k] = load_high_score_name(j-1, k);
+                }
+                temp_score = load_high_score_score(j-1);
+                save_high_score(j, temp_user, temp_score);
+            }
+            for (uint8_t k = 0; k < 3; k++){
+                temp_user[k] = load_user(user, k);
+            }
+            save_high_score(i, temp_user, points);
+            break;
+        }
+    }
+
+}

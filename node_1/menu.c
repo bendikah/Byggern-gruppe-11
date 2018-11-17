@@ -8,7 +8,8 @@
 #include "uart.h"
 #include "snake_game.h"
 #include "breadboard_input.h"
-
+#include "pingpong.h"
+#include "load_and_save.h"
 
 
 
@@ -36,7 +37,7 @@ static void draw_page_snake_difficulty();
 
 void menu_init(){
 	menu_branch = 0;
-	current_page = &page_main;
+	current_page = &page_start;
 	menu_draw();
 }
 
@@ -279,12 +280,12 @@ static void draw_page_play(){
 			//oled_printf("->");
 			oled_sram_print("->");
 		}
-
+		//USART_printf("for");
 		oled_sram_print(page_play_strings[i]);
 		oled_sram_print("\n");
 	}
 	oled_sram_update();
-
+	//USART_printf("draw play finished");
 	return;
 }
 
@@ -312,6 +313,7 @@ static void draw_page_snake_difficulty(){return;}
 //char* current_user;
 
 void menu_next_page(){
+	uint8_t temp_points;
 		switch (current_page->index){
 			case (START):
 
@@ -346,6 +348,18 @@ void menu_next_page(){
 					else if (menu_branch == 1){
 						snake_play_both();
 					}
+					break;
+
+			case (PLAY):
+				if (menu_branch == 0){
+					temp_points = pingpong_start();
+				    //save_high_score(0,"user",254);
+					if (user < 2){
+						save_score(user,temp_points);
+					}
+					_delay_ms(2000);
+				}
+				break;
 		}
 		if (current_page->children[menu_branch] != NULL){
 			current_page = current_page->children[menu_branch];

@@ -23,6 +23,8 @@ int16_t control_input;
 
 int16_t position;
 
+uint8_t pid_interrupt_active;
+
 void PID_init(){
 	USART_printf("-------------------START---------\n");
 	position = 0;
@@ -102,6 +104,7 @@ void PID_timer_init(){
   //set_bit(TIMSK3,OCIE3B);
   //set top mode
   ICR3 = 6500;
+  pid_interrupt_active = 1;
 	//OCR3A =30000;
 
 	/*
@@ -133,14 +136,17 @@ void PID_set_ref(uint8_t ref){
 #warning thiss is just some simple scaling. Should be better
 }
 void PID_stop(){
-  clear_bit(TIMSK3,OCIE3A);
+  //clear_bit(TIMSK3,OCIE3A);
+  pid_interrupt_active = 0;
 }
 
 
 ISR(TIMER3_COMPA_vect){
 	//USART_printf("Interrupt virker \n");
 	// Wake up the CPU!
-	PID_update();
+	if (pid_interrupt_active == 1){
+		PID_update();
+	}
 	//PID_update_system();
 
 }

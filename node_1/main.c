@@ -21,6 +21,7 @@
 #include "load_and_save.h"
 #include "eeprom.h"
 #include "snake_game.h"
+#include "pingpong.h"
 
 int main(void){
   //DDRA = 0xFF;
@@ -39,7 +40,7 @@ int main(void){
   //menu_init();
 //reboot();
 
-  USART_printf("STARTING \n");
+  USART_printf("START \n");
   char user_1[] = {'e','i','v'};
   char user_2[] = {'r','o','b'};
   save_user(0,user_1);
@@ -56,15 +57,13 @@ int main(void){
   oled_sram_update();*/
 //_delay_ms(3000);
 
-  /*
-  save_user(1,user_1);
-  oled_sram_clear_screen();
+
   save_high_score(0,"eiv",254);
   save_high_score(1,"rob",10);
   save_high_score(2,"ben",7);
   save_high_score(3,"eiv",4);
   save_high_score(4,"ben",1);
-  */
+
   /*
   oled_sram_clear_screen();
   oled_sram_print("Halla\n");
@@ -84,9 +83,24 @@ int main(void){
   //oled_sram_update();
   //_delay_ms(5000);
   //add_user(1);
+  //test_can();
+  //test_menu();
+  can_init(1);
+  can_handler_init();
+  /*while(1){
+    can_transmit(&msg_game_start);
 
-  test_menu();
+    can_message recieved_msg;
+     can_recieve(&recieved_msg);
 
+      USART_printf("Recied CAN.lid = %x \n", recieved_msg.id);
+
+
+    _delay_ms(700);
+}*/
+
+    test_menu();
+  //pingpong_start();
 
   struct Joystick_positions joystick_positions;
 /*
@@ -120,12 +134,11 @@ int main(void){
   //testing can
   //test_can();
 
-  USART_printf("test Motor\n");
   can_init(1);
   joystick_init();
   //Servo test
   _delay_ms(2000);
-  can_transmit(&msg_game_start);
+  //can_transmit(&msg_game_start);
   while(1){
   _delay_ms(50);
   joy_send_pos();

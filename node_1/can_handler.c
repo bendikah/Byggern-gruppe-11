@@ -30,14 +30,19 @@ ISR(INT0_vect){
   can_message recieved_msg;
     can_recieve(&recieved_msg);
 
-    //USART_printf("Recieved something? \n");
     switch (recieved_msg.id) {
         case REMOVE_BALL_ID:
             ball_in_way = 1;
             break;
         case GAME_STARTING_ID:
             ball_in_way = 0;
+            pingpong_running = 1;
             break;
+        case LOST_GAME_ID:
+            pingpong_running = 0;
+            ball_in_way = 1;
+            pingpong_points = recieved_msg.data[0];
+
         default:
           break;
 

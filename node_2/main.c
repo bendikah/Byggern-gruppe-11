@@ -37,6 +37,7 @@ int main(void){
 
     USART_printf("Starting node2\n");
     while(1){
+        //ir_check_signal();
         if(game_start == 1){
             USART_printf("game starting\n");
             game_start = 0;
@@ -46,7 +47,7 @@ int main(void){
             can_transmit(&msg_lost_game);
         }
         USART_printf("not starting...\n");
-        _delay_ms(2000);
+        _delay_ms(500);
 
 
     }

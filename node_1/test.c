@@ -47,6 +47,7 @@ void test_latch(void){
 	set_bit(PORTE,1);
 
 }
+//#define DEBUG_TEST_TEST
 
 void test_can(void){
 	can_init(1);
@@ -55,15 +56,15 @@ void test_can(void){
   msg.id = 1;
   msg.length = 3;
   msg.data[0] = 7;
-  msg.data[1] = 2;
-  msg.data[2] = 0;
+  msg.data[1] = 0;
+  msg.data[2] = 2;
 	#ifdef DEBUG_TEST_TEST
 	USART_printf("CAN TEST STARTING");
 	#endif
   can_message new_msg;
   int i = 0;
   while(1){
-    msg.data[2] = i;
+    msg.data[1] = i;
     i++;
     can_transmit(&msg);
     _delay_ms(2000);
