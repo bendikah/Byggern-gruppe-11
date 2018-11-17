@@ -20,6 +20,8 @@
 #include "can_messages.h"
 #include "solenoid.h"
 #include "pingpong.h"
+#include "buzzer.h"
+#include "music.h"
 
 /*
  * Main should listen to message from node 1 if it is gonna start the game or not.
@@ -36,7 +38,16 @@ int main(void){
     can_handler_init();
 
     USART_printf("Starting node2\n");
-    while(1){
+    //et_bit(DDRG, PIN5);
+    //et_bit(PORTG, PIN5);
+
+    buzzer_init();
+    //buzzer_set_tone(440,2000);
+    firstSection();
+
+    while(1){};
+
+    /*while(1){
         //ir_check_signal();
         if(game_start == 1){
             USART_printf("game starting\n");
@@ -50,7 +61,7 @@ int main(void){
         _delay_ms(500);
 
 
-    }
+    }*/
 
 
 
