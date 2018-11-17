@@ -32,7 +32,7 @@ void PID_init(){
 	kp = 1;
 	ki = 250;
 	kd = 1000;
-	dt = 100;
+	dt = 50;
 	prevError = 0;
 	integral = 0;
 	control_input = 0;
@@ -103,7 +103,7 @@ void PID_timer_init(){
   //enable interrupt on comparing counter 3 compare B
   //set_bit(TIMSK3,OCIE3B);
   //set top mode
-  ICR3 = 6500;
+  ICR3 = 5000;
   pid_interrupt_active = 1;
 	//OCR3A =30000;
 
@@ -138,6 +138,10 @@ void PID_set_ref(uint8_t ref){
 void PID_stop(){
   //clear_bit(TIMSK3,OCIE3A);
   pid_interrupt_active = 0;
+}
+
+void PID_start(){
+	pid_interrupt_active = 1;
 }
 
 

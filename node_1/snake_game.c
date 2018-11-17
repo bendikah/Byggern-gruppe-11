@@ -50,6 +50,7 @@ void snake_play_both(){
 
 void snake_init(struct Snake_game* snake){
     // Initialize the map
+    snake->food = 3;
     initMap(snake);
     snake->running = 1;
 }
@@ -91,6 +92,7 @@ uint8_t snake_run(uint8_t difficulty){
     snake1.mapheight = 16;
     snake1.mapwidth = 8;
     snake1.size = 128;
+    snake1.food = 3;
     initMap(&snake1);
     snake1.running = 1;
     while (snake1.running) {

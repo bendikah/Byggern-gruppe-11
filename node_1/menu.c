@@ -44,6 +44,7 @@ void menu_init(){
 
 void add_user(uint8_t user_pos){
 	oled_sram_clear_screen();
+	oled_sram_update();
 	_delay_ms(500);
 	char letter = 'A';
 	uint8_t i = 0;
@@ -69,13 +70,13 @@ void add_user(uint8_t user_pos){
 		else if (joystick_positions.y <= -40){
 			letter--;
 		}
-		if (joystick_read_button()){
+		if (right_touch_button_read()){
 			current_user[i] = letter;
 			letter = 'A';
 			i++;
 			if(i == 3){
-				_delay_ms(500);
 				oled_sram_update();
+				_delay_ms(500);
 			break;}
 			oled_goto_line(3);
 			oled_goto_column((i-1)*8);
@@ -291,9 +292,9 @@ static void draw_page_play(){
 
 static void draw_page_pingpong(){return;};
 
-char* page_snake_strings[5] = {"----SNAKE-----","SINGLE PLAYER","MULTI PLAYER","SETTINGS", "BACK"};
+char* page_snake_strings[5] = {"----SNAKE-----","SINGLE PLAYER","MULTI PLAYER", "BACK"};
 static void draw_page_snake(){
-	for (int i = 0; i < 5; i++){
+	for (int i = 0; i < 4; i++){
 		if (i-1 == menu_branch){
 			//oled_printf("->");
 			oled_sram_print("->");

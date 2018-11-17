@@ -30,7 +30,10 @@ void pingpong_init(){
     //reset the encoder for this position
     encoder_read();
     PID_init();
+
     PID_timer_init();
+    PID_stop();
+
     pwm_init();
     solenoid_init();
     pingpong_timer_init();
@@ -47,6 +50,7 @@ uint8_t pingpong_start(){
     can_transmit(&msg_game_starting);
     pingpong_timer_start();
     number_of_points = 0;
+    PID_start();
     while(1){
         servo_set_angle((int8_t) joy_pos_x);
         //USART_printf("joy_pos_x = %d\n",joy_pos_x);
@@ -58,8 +62,8 @@ uint8_t pingpong_start(){
           solenoid_shoot();
 
         }
-        PID_print();
-        _delay_ms(1000);
+        //PID_print();
+        _delay_ms(100);
     }
 
         //recieve can message with ID joy_sliders...

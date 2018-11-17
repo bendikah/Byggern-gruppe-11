@@ -68,7 +68,7 @@ int ir_check_signal(){
     uint8_t val = adc_get_value();
     USART_printf("ADC  %d \n",val);
     #warning Add filter?
-    if (val > 190){
+    if (val > 210){
         return 0;
     }
     else if(val < 150){
