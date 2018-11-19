@@ -41,6 +41,7 @@ uint8_t pingpong_start(){
     oled_sram_update();
     while (ball_in_way == 0){
         joy_send_pos();
+        _delay_ms(15);
     }
     oled_sram_print("You got ");
     char streng[4];// = {0,0,0};
