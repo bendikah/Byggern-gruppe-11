@@ -20,12 +20,12 @@ void pingpong_init(){
     ir_init();
     motor_init();
     //Go all the way to the right, startposition
-    USART_printf("motor to the right\n");
+
     motor_set_speed(90);
     motor_set_direction(1);
     _delay_ms(3000);
     motor_set_speed(0);
-    USART_printf("Motor is to the left\n");
+
     encoder_init();
     //reset the encoder for this position
     encoder_read();
@@ -42,7 +42,7 @@ void pingpong_init(){
 }
 
 uint8_t pingpong_start(){
-    #warning also use difficulty
+    
     while(ir_check_signal() == 0){
         can_transmit(&msg_remove_ball);
         _delay_ms(500);
@@ -53,7 +53,7 @@ uint8_t pingpong_start(){
     PID_start();
     while(1){
         servo_set_angle((int8_t) joy_pos_x);
-        //USART_printf("joy_pos_x = %d\n",joy_pos_x);
+
         int signal = ir_check_signal();
         if(signal == 0){
             break;
@@ -63,26 +63,10 @@ uint8_t pingpong_start(){
 
         }
         //PID_print();
-        _delay_ms(100);
+        //_delay_ms(2000);
     }
 
-        //recieve can message with ID joy_sliders...
-        /*can_extract_msg(&msg);*/
-        //if joybutton pushed -> solenoid_shoot();
-
-#warning Should this not be joy button in interrupt h?
-        //if (msg.data[2] == 1){
-          //  solenoid_shoot();
-        //}
-        //use slider data to update reference of motor position
-        //PID_set_ref(msg.data[4]);
-        //use joydata to set servo_angle
-#warning thiss is wrong number since data is uint but the function needs an int from -100 to 100.
-      //  servo_set_angle(msg.data[0]);
-
     //when entering this you have lost the game
-
-    //Send a can message to node 1 about the loss. (make oled print some stuff);
     pingpong_timer_stop();
     PID_stop();
     motor_set_speed(0);

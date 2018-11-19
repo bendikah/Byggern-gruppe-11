@@ -53,6 +53,7 @@ void oled_sram_initialize(void){
     char_size = 'L';
     current_col = 0;
     current_row = 0;
+    oled_sram_clear_screen();
 }
 
 void oled_sram_clear_screen(void){

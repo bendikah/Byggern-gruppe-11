@@ -103,8 +103,9 @@ void test_mcp(){
 }
 
 void test_menu(void){
-	menu_init();
 	joystick_init();
+	menu_init();
+
 	struct Joystick_positions joystick_positions;
 
 	while(1){

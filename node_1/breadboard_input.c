@@ -4,9 +4,11 @@
 #include "uart.h"
 #include <stdio.h>
 #include <avr/io.h>
+#include "oled_sram.h"
+#include "util/delay.h"
 
 
-//#define JOYSTICK_CALIBRATE
+#define JOYSTICK_CALIBRATE
 
 #define LEFT_SLIDER		CHANNEL_1
 #define RIGHT_SLIDER		CHANNEL_2
@@ -46,51 +48,53 @@ void joystick_init()
 
 void joystick_calibrate()
 {
-	/*printf("Calibrating Joystick - move joystick to TOP, then press the right button:\n");
-	while(!test_bit(PINB, rightButton)){};
+	oled_sram_print("joy up");// Joystick - move joystick to TOP, then press the right button:\n");
+	oled_goto_column(0);
+	oled_goto_line(1);
+	oled_sram_print("& push but");
 
-	ADC_read(channelX);
+	oled_sram_update();
+	while(!right_touch_button_read()){};
 
-	_delay_us(1000);
-	OFFSETS.y_max = POSITION.y;
-	_delay_ms(500);
+	joystick_offsets.y_max = adc_read(Y_AXIS);
 
-	printf("Good job! value at TOP position: Y = %d\n\n", OFFSETS.y_max);
+	_delay_ms(2000);
+	oled_goto_column(32);
+	oled_sram_print("right");// Joystick - move joystick to RIGHT, then press the right button:\n");
+	oled_sram_update();
 
-	printf("Calibrating Joystick - move joystick to RIGHT, then press the right button:\n");
-	while(!test_bit(PINB, rightButton)){};
+	while(!right_touch_button_read()){};
 
-	ADC_read(channelX);
-	_delay_us(1000);
-	OFFSETS.x_max = POSCSITION.x;
+	joystick_offsets.x_max = adc_read(X_AXIS);	_delay_us(1000);
 
-	_delay_ms(500);
-	printf("Good job! value at RIGHT position: X = %d\n\n", OFFSETS.x_max);
+_delay_ms(2000);
+oled_goto_column(32);
+	oled_sram_print("left ");// Joystick - move joystick to LEFT, then press the right button:\n");
+	oled_sram_update();
 
-	printf("Calibrating Joystick - move joystick to LEFT, then press the right button:\n");
-	while(!test_bit(PINB, rightButton)){};
+	while(!right_touch_button_read()){};
 
-	ADC_read(channelX);
-	_delay_us(1000);
-	OFFSETS.x_min = POSITION.x;
+	joystick_offsets.x_min = adc_read(X_AXIS);
 
-	_delay_ms(500);
-	printf("Good job! value at LEFT position: X = %d\n\n", OFFSETS.x_min);
+	_delay_ms(2000);
+	oled_goto_column(32);
+	oled_sram_print("down  ");// Joystick - move joystick to BOTTOM, then press the right button:\n");
+	oled_sram_update();
 
-	printf("Calibrating Joystick - move joystick to BOTTOM, then press the right button:\n");
-	while(!test_bit(PINB, rightButton)){};
+	while(!right_touch_button_read()){};
 
-	ADC_read(channelX);
-	_delay_us(1000);
-	OFFSETS.y_min = POSITION.y;
+	joystick_offsets.y_min = adc_read(Y_AXIS);
 
-	_delay_ms(500);
-	printf("Good job! value at BOTTOM position: Y = %d\n\n", OFFSETS.y_min);
+	_delay_ms(2000);
+	oled_goto_column(32);
+	oled_sram_print("mid  ");
+	oled_sram_update();
 
-	OFFSETS.x_neutral = (OFFSETS.x_max + OFFSETS.x_min)/2;
-	OFFSETS.y_neutral = (OFFSETS.y_max + OFFSETS.y_min)/2;
-	printf("Offsets calculated to be: x.neutral = %d, y.neutral = %d.\n\n", OFFSETS.x_neutral, OFFSETS.y_neutral);
-	*/
+	while(!right_touch_button_read()){};
+	joystick_offsets.x_neutral = adc_read(X_AXIS);
+	joystick_offsets.y_neutral = adc_read(Y_AXIS);
+	USART_printf("Offsets");// calculated to be: x.neutral = %d, y.neutral = %d.\n\n", joystick_offsets.x_neutral, joystick_offsets.y_neutral);
+
 }
 
 struct Joystick_positions joystick_read_positions(){
