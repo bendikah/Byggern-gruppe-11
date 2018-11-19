@@ -1,3 +1,5 @@
+//code inspired from https://codereview.stackexchange.com/questions/66481/snake-game-in-c
+
 #include <avr/io.h>
 #include <stdio.h>
 #include "global_defines.h"
